@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b4842ad5-92f6-405e-b005-0d5e02fb75d5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../demo/src/main/java/com/example/demo/update/AdminController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../demo1_naocs_YC/src/main/java/com/example/demo1_nacos/demo/boltInvoke.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../demo1_naocs_YC/src/main/java/com/example/demo1_nacos/demo/receiveTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../demo1_naocs_YC/src/main/java/com/example/demo1_nacos/mapper/DataMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../demo1_naocs_YC/src/main/java/com/example/demo1_nacos/rpc/HelloService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../demo1_naocs_YC/src/main/java/com/example/demo1_nacos/rpc/HelloServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../demo1_naocs_YC/src/main/java/com/example/demo1_nacos/service/RmArchiveUpdateService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../demo1_naocs_YC/src/main/resources/mapper/mysql/DataMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../demo1_naocs_YC/src/main/resources/security/security.acl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../groovy/groovy_test/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../groovy/groovy_test/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../groovy/groovy_test/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../groovy/groovy_test/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../groovy/groovy_test/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../groovy/groovy_test/src/CombinationData.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../groovy/groovy_test/src/Yulin.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../groovy/groovy_test/src/demo1_minio.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../groovy/groovy_test/src/metadata_bundle.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../groovy/groovy_test/src/metadata_validator.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../groovy/groovy_test/src/temp.groovy" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="localRepository" value="D:\maven-repository" />
+        <option name="mavenHome" value="$PROJECT_DIR$/../../apache-maven-3.6.1" />
+        <option name="userSettingsFile" value="D:\apache-maven-3.6.1\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2AatGfP4luamTYQVTFqsbnLyA0Z" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+    <option name="showModules" value="false" />
+    <option name="showVisibilityIcons" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ExpandSpringBootJavaOptionsPanel" value="true" />
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="dynamic.classpath" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/test/java/com/example/demo1_nacos" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+  </component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\anbo\demo1_naocs\src\test\java\com\example\demo1_nacos" />
+      <recent name="D:\anbo\demo1_naocs\src\main\java\com\example\demo1_nacos\util" />
+      <recent name="D:\anbo\demo1_naocs\src\main\java\com\example\demo1_nacos\rm" />
+      <recent name="D:\anbo\demo1_naocs\src\main\java\com\example\demo1_nacos\service\erms" />
+      <recent name="D:\anbo\demo1_naocs\src\main\resources" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.example.demo1_nacos.service" />
+      <recent name="com.example.demo1_nacos" />
+      <recent name="com.example.demo1_nacos.advice" />
+      <recent name="com.example.demo1_nacos.rm.common.util" />
+      <recent name="com.example.demo1_nacos.pojo" />
+    </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn clean install " />
+      <command value="mvn clean" />
+      <command value="mvn compile" />
+      <command value="mvn clean install -Dmaven.test.skip=true" />
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.Demo1NacosApplication">
+    <configuration name="ArchiveController" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.demo1_nacos.controller.ArchiveController" />
+      <module name="demo_rm_nacos" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.demo1_nacos.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ArchiveServiceImpl" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.demo1_nacos.service.ArchiveServiceImpl" />
+      <module name="demo_rm_nacos" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.demo1_nacos.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DingServiceImpl" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.demo1_nacos.service.DingServiceImpl" />
+      <module name="demo_rm_nacos" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.demo1_nacos.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="hello" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.demo1_nacos.controller.hello" />
+      <module name="demo_rm_nacos" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.demo1_nacos.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="receiveTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.demo1_nacos.receiveTest" />
+      <module name="demo_rm_nacos" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.demo1_nacos.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="DjangoTestsConfigurationType">
+      <module name="demo_rm_nacos" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="TARGET" value="" />
+      <option name="SETTINGS_FILE" value="" />
+      <option name="CUSTOM_SETTINGS" value="false" />
+      <option name="USE_OPTIONS" value="false" />
+      <option name="OPTIONS" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="demo_rm_nacos" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="demo_rm_nacos" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="PyBehaveRunConfigurationType" factoryName="Behave">
+      <module name="demo_rm_nacos" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="ADDITIONAL_ARGS" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="demo_rm_nacos" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="Python.FlaskServer">
+      <module name="demo_rm_nacos" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Demo1NacosApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="demo_rm_nacos" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.demo1_nacos.Demo1NacosApplication" />
+      <option name="VM_PARAMETERS" value="-DNACOS_NAMESPACE=amberdata" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Tox" factoryName="Tox">
+      <module name="demo_rm_nacos" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Doctests">
+      <module name="demo_rm_nacos" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Unittests">
+      <module name="demo_rm_nacos" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.ArchiveController" />
+      <item itemvalue="Application.ArchiveServiceImpl" />
+      <item itemvalue="Application.hello" />
+      <item itemvalue="Application.receiveTest" />
+      <item itemvalue="Application.DingServiceImpl" />
+      <item itemvalue="Spring Boot.Demo1NacosApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.DingServiceImpl" />
+        <item itemvalue="Application.ArchiveServiceImpl" />
+        <item itemvalue="Application.ArchiveController" />
+        <item itemvalue="Application.receiveTest" />
+        <item itemvalue="Application.hello" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b4842ad5-92f6-405e-b005-0d5e02fb75d5" name="Default Changelist" comment="" />
+      <created>1655259431801</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1655259431801</updated>
+      <workItem from="1655259433477" duration="3657000" />
+      <workItem from="1655345966725" duration="1812000" />
+      <workItem from="1655433866735" duration="1960000" />
+      <workItem from="1655797102437" duration="592000" />
+      <workItem from="1657348064214" duration="738000" />
+      <workItem from="1657497792392" duration="581000" />
+      <workItem from="1661221468921" duration="15622000" />
+      <workItem from="1661326205608" duration="933000" />
+      <workItem from="1661431908872" duration="1297000" />
+      <workItem from="1662520405213" duration="8708000" />
+      <workItem from="1662604090104" duration="14061000" />
+      <workItem from="1662690952103" duration="11251000" />
+      <workItem from="1662711805681" duration="2600000" />
+      <workItem from="1663052781354" duration="27823000" />
+      <workItem from="1663203799439" duration="12251000" />
+      <workItem from="1663243819172" duration="1901000" />
+      <workItem from="1663290434336" duration="52436000" />
+      <workItem from="1663550830185" duration="14311000" />
+      <workItem from="1663570996494" duration="18054000" />
+      <workItem from="1663809128582" duration="13722000" />
+      <workItem from="1663894812430" duration="12523000" />
+      <workItem from="1664176423687" duration="15051000" />
+      <workItem from="1664329536533" duration="30108000" />
+      <workItem from="1665058354454" duration="69000" />
+      <workItem from="1665151939512" duration="3093000" />
+      <workItem from="1665278089069" duration="582000" />
+      <workItem from="1665718681904" duration="619000" />
+      <workItem from="1666141876954" duration="731000" />
+      <workItem from="1666177879160" duration="2680000" />
+      <workItem from="1666409577509" duration="2499000" />
+      <workItem from="1667189690387" duration="34155000" />
+      <workItem from="1667363708769" duration="1626000" />
+      <workItem from="1667439368047" duration="590000" />
+      <workItem from="1667459039522" duration="16134000" />
+      <workItem from="1667815054172" duration="5410000" />
+      <workItem from="1668042828491" duration="2070000" />
+      <workItem from="1668132066489" duration="15271000" />
+      <workItem from="1668419784165" duration="567000" />
+      <workItem from="1668480594151" duration="4042000" />
+      <workItem from="1668568794935" duration="572000" />
+      <workItem from="1668646665181" duration="561000" />
+      <workItem from="1668768113512" duration="5827000" />
+      <workItem from="1668934424771" duration="9000000" />
+      <workItem from="1669642204537" duration="548000" />
+      <workItem from="1669885230297" duration="294000" />
+      <workItem from="1669950842466" duration="626000" />
+      <workItem from="1670376203523" duration="582000" />
+      <workItem from="1670462815641" duration="4783000" />
+      <workItem from="1670999037212" duration="589000" />
+      <workItem from="1672059409971" duration="4586000" />
+      <workItem from="1672239708618" duration="56000" />
+      <workItem from="1672239867487" duration="573000" />
+      <workItem from="1672734516447" duration="801000" />
+      <workItem from="1672736497168" duration="1219000" />
+      <workItem from="1673331059066" duration="2553000" />
+      <workItem from="1673338208383" duration="16553000" />
+      <workItem from="1673489337422" duration="1307000" />
+      <workItem from="1673517788819" duration="583000" />
+      <workItem from="1676282762342" duration="1594000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/common/util/v4_1.0.8/util-v4_1.0.8.jar!/cn/amberdata/common/util/excel/old/ExcelUtils.class</url>
+          <line>158</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$PROJECT_DIR$/../../maven-repository/com/baomidou/mybatis-plus-core/3.4.2/mybatis-plus-core-3.4.2.jar!/com/baomidou/mybatisplus/core/MybatisConfiguration.class</url>
+          <line>171</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/boot/blobstore-spring-boot-starter/2.0.1/blobstore-spring-boot-starter-2.0.1.jar!/cn/amberdata/boot/blobstore/spring/boot/starter/route/BlobStoreFactory.class</url>
+          <line>103</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/boot/blobstore-spring-boot-starter/2.0.1/blobstore-spring-boot-starter-2.0.1.jar!/cn/amberdata/boot/blobstore/spring/boot/starter/route/StrategyEnum.class</url>
+          <line>28</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo1_nacos/advice/BusinessExceptionHandler.java</url>
+          <line>43</line>
+          <option name="timeStamp" value="41" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo1_nacos/collector/SqlServerCollector.java</url>
+          <line>46</line>
+          <option name="timeStamp" value="49" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com/example/demo1_nacos/receiveTest.java</url>
+          <line>142</line>
+          <option name="timeStamp" value="71" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com/example/demo1_nacos/receiveTest.java</url>
+          <line>143</line>
+          <option name="timeStamp" value="72" />
+        </line-breakpoint>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="com.alipay.sofa.rpc.core.exception.SofaRouteException" package="com.alipay.sofa.rpc.core.exception" />
+          <option name="timeStamp" value="31" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/demo1_naocs$Demo1NacosApplication.ic" NAME="Demo1NacosApplication Coverage Results" MODIFIED="1664278163499" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
+</project>

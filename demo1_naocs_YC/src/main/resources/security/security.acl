@@ -1,0 +1,4 @@
+/match_rule/convert_GET>NOT_LOGIN
+/error>NOT_LOGIN
+/swagger-ui.html>NOT_LOGIN
+/v2/api-docs>NOT_LOGIN
