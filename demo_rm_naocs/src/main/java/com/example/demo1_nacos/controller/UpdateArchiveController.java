@@ -23,12 +23,13 @@ public class UpdateArchiveController {
     @Resource
     private UpdateArchiveServiceImpl updateArchivalIdByYuLin;
 
-    @GetMapping("/add_ly_xcsj")
+
+    @GetMapping("/add_ly_XCSJ_str")
     public void addLyXCSJ(@RequestParam String objectType){
-        updateArchivalIdByYuLin.addWSBlock(objectType);
+        updateArchivalIdByYuLin.addLyXCSJ(objectType);
     }
 
-    @GetMapping("/update_ly_XCSJ_str")
+    @GetMapping("/repair_ly_XCSJ_str")
     public void repairXCSJFormat(@RequestParam String objectType){
         updateArchivalIdByYuLin.repairXCSJFormat(objectType);
     }

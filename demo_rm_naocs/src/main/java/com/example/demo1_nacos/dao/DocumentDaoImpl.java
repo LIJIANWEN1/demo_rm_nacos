@@ -1,6 +1,6 @@
 package com.example.demo1_nacos.dao;
 
-import cn.amberdata.common.response.exception.BusinessException;
+import cn.amberdata.common.util.exception.BusinessException;
 import cn.amberdata.dm.document.DocumentRepository;
 import cn.amberdata.dm.folder.Folder;
 import cn.amberdata.dm.folder.FolderRepository;
