@@ -1,10 +1,4 @@
 package com.example.demo1_nacos.service;
-import cn.amberdata.cache.CacheTemplate;
-import cn.amberdata.common.contenttransfer.ContentTransfer;
-import cn.amberdata.common.util.excel.old.ExcelUtils;
-import cn.amberdata.common.util.httpclient.HttpClientUtil;
-import cn.amberdata.common.util.zip.CompressUtils;
-import cn.amberdata.common.util.zip.ZipFileUtil;
 import cn.amberdata.dm.common.context.session.SessionContext;
 import cn.amberdata.dm.document.DocumentDO;
 import cn.amberdata.dm.session.SessionUtil;
@@ -20,19 +14,12 @@ import cn.amberdata.rm.classification.SubCategory;
 import cn.amberdata.rm.common.domain.TypeClassConstant;
 import cn.amberdata.rm.metadata.metadatacolumn.MetadataColumn;
 import cn.amberdata.rm.metadata.metadatacolumn.MetadataColumnRepository;
-import cn.amberdata.rm.settings.strategy.RetentionStrategy;
 import cn.amberdata.rm.settings.strategy.RetentionStrategyRepository;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.demo1_nacos.pojo.YC.CertificatePO;
-import com.example.demo1_nacos.pojo.YC.OrderInfo;
-import com.example.demo1_nacos.pojo.YC.YCResult;
-import com.google.common.collect.Lists;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Predicate;
@@ -43,17 +30,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.SAXReader;
-import org.dom4j.io.XMLWriter;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -92,20 +71,27 @@ public class UpdateArchiveServiceImpl {
         SessionContext.setSession(SessionUtil.getAdminSession());
         QueryWrapper<SysObjectDO> queryWrapper = new QueryWrapper<>();
         queryWrapper.likeRight("s_object_path", path).eq("archive_type",archiveType);
-        List<SysObjectDO> list = sysObjectMapper.findByWrapper(queryWrapper, new Page<>(1, 1000)).getRecords();
+        List<SysObjectDO> list = sysObjectMapper.findByWrapper(queryWrapper, new Page<>(1, 5000)).getRecords();
         for (SysObjectDO sysObjectDO : list) {
             String id = sysObjectDO.getId();
             Record record = recordRepository.find(id);
-            String third_class_code = record.getString("third_class_code");
+//            String third_class_code = record.getString("third_class_code");
+            String archival_id = record.getArchivalId();
+            String year = record.getFileYear();
+            String classification = record.getClassification();
+            String retention_period = record.getRetentionPeriod();
+            String item_code = archival_id.substring(archival_id.lastIndexOf("-")+1);
+            String new_archival_id = year+"-"+classification+"-"+retention_period+"-"+item_code;
+            System.out.println(new_archival_id);
             Map<String, Object> map = new HashMap<>();
-            map.put("retention_period", third_class_code);
+            map.put("archival_id", new_archival_id);
             DocumentContext documentContext = updateJson(record.getJsonMetadata(), map);
             Record updateRecord = recordRepository.findByIdAndUpdateJsonMetadata(record.getObjectId().getId(), documentContext.jsonString());
             updateRecord.update();
             updateRecord.updateJsonMetadata(documentContext.jsonString());
             fixedThreadPool.execute(() -> {
                 recordRepository.store(updateRecord);
-                System.out.println("---旧档号---" + record.getArchivalId() + "-----" + third_class_code);
+                System.out.println("---旧档号---" + record.getArchivalId() + "-----" + new_archival_id);
             });
             System.out.println("------修改完成----");
         }
@@ -135,20 +121,20 @@ public class UpdateArchiveServiceImpl {
             System.out.println(year+"--"+firstName+"---"+secondName+"----"+thirdName+"---"+ids.size());
             int i = 1;
             for (String id : ids) {
-////                SubCategory subCategory = rmOtherService.getSubCategoryByClassRule("file_year@first_class_name@retention_period","bf14013771219501056",map,"bf14013771219501056");
-//                Record record = recordRepository.find(id);
-////                //设置分类号
-////                record.updateClassification(subCategory.getClassificationCode(), subCategory.getObjectId().getId());
-//                List<MetadataColumn> recordMetadataColumnList = metadataColumnRepository.getMetadataColumnByMetadataSchemeId(record.getMetadataSchemeId());
-////                //移动到档案库对应门类下
-////                record.move(subCategory.getObjectPath());
-////                RetentionStrategy retentionStrategy = retentionStrategyRepository.find("bf14012897260765184");
-////                record.archive(null, true, "", retentionStrategy);
+//                SubCategory subCategory = rmOtherService.getSubCategoryByClassRule("file_year@first_class_name@retention_period","bf14013771219501056",map,"bf14013771219501056");
+                Record record = recordRepository.find(id);
+//                //设置分类号
+//                record.updateClassification(subCategory.getClassificationCode(), subCategory.getObjectId().getId());
+                List<MetadataColumn> recordMetadataColumnList = metadataColumnRepository.getMetadataColumnByMetadataSchemeId(record.getMetadataSchemeId());
+//                //移动到档案库对应门类下
+//                record.move(subCategory.getObjectPath());
+//                RetentionStrategy retentionStrategy = retentionStrategyRepository.find("bf14012897260765184");
+//                record.archive(null, true, "", retentionStrategy);
 //                String newArchivalId = year+"."+record.getString("first_class_code")+"."+record.getString("second_class_code")+"."+retentionPeriod+
 //                        "-"+String.format("%04d", i);
 //                record.updateArchivalId(newArchivalId);
-//                record.updateJsonForm(null, recordMetadataColumnList);
-//                recordRepository.store(record);
+                record.updateJsonForm(null, recordMetadataColumnList);
+                recordRepository.store(record);
                 System.out.println("---------------"+id);
                 i++;
             }
@@ -337,30 +323,31 @@ public class UpdateArchiveServiceImpl {
     public void updateTimeStrYL(String path) {
         SessionContext.setSession(SessionUtil.getAdminSession());
         QueryWrapper<SysObjectDO> queryWrapper = new QueryWrapper<>();
-        queryWrapper.likeRight("s_object_path", path).eq("archive_type","da_volume").like("start_time","T");
-        List<SysObjectDO> list = sysObjectMapper.findByWrapper(queryWrapper, new Page<>(1, 6000)).getRecords();
+        queryWrapper.likeRight("s_object_path", path).eq("archive_type","da_record").like("doc_pub_date","T");
+        List<SysObjectDO> list = sysObjectMapper.findByWrapper(queryWrapper, new Page<>(1, 20000)).getRecords();
         AtomicReference<Integer> a = new AtomicReference<>(list.size());
         for (SysObjectDO sysObjectDO : list) {
             String id = sysObjectDO.getId();
-            Volume volume = volumeRepository.find(id,false);
-            String start_time;
-            String end_time;
+            Record record = recordRepository.find(id);
+            String docPubDate;
             try{
-                start_time  = readJson(volume.getJsonMetadata(), "start_time");
-                end_time  = readJson(volume.getJsonMetadata(), "end_time");
+                docPubDate = readJson(record.getJsonMetadata(), "doc_pub_date");
+//                start_time  = readJson(record.getJsonMetadata(), "start_time");
+//                end_time  = readJson(record.getJsonMetadata(), "end_time");
             }catch (Exception e){
                 e.printStackTrace();
-                System.out.println(volume.getArchivalId());
+                System.out.println(record.getArchivalId());
                 continue;
             }
 
-            System.out.println("---旧档号---" + volume.getArchivalId() + "----" + end_time);
-            Volume updateVolume = volumeRepository.findByVolumeIdAndUpdateJsonMetadata(volume.getObjectId().getId(), volume.getJsonMetadata());
+            System.out.println("---旧档号---" + record.getArchivalId() + "----" + docPubDate);
+            Record updateVolume = recordRepository.findByIdAndUpdateJsonMetadata(record.getObjectId().getId(), record.getJsonMetadata());
             updateVolume.update();
-            updateVolume.setString("end_time", end_time);
-            updateVolume.setString("start_time", start_time);
+            updateVolume.setString("doc_pub_date", docPubDate);
+//            updateVolume.setString("end_time", end_time);
+//            updateVolume.setString("start_time", start_time);
             fixedThreadPool.execute(() -> {
-                volumeRepository.store(updateVolume);
+                recordRepository.store(updateVolume);
                 a.getAndSet(a.get() - 1);
                 System.out.println(a);
             });
@@ -401,9 +388,8 @@ public class UpdateArchiveServiceImpl {
 
 
     public static void main(String[] args) throws DocumentException {
-        String aa = "{\"record\":{\"version_no\":\"2\",\"metadata_scheme_name\":\"文书档案（卷）\",\"block\":[{\"name\":\"归档信息\",\"block\":[{\"name\":\"资源标识\",\"property\":[{\"name\":\"archive_1st_category\",\"title\":\"一级门类编码\",\"content\":\"WS\"},{\"name\":\"fonds_id\",\"title\":\"全宗号\",\"content\":\"0014\"},{\"name\":\"classification\",\"title\":\"分类号\",\"content\":\"014\"},{\"name\":\"volume_id\",\"title\":\"案卷号\",\"content\":\"002\"},{\"name\":\"archival_id\",\"title\":\"档号\",\"content\":\"0014-2005-002\"},{\"name\":\"catalog_code\",\"title\":\"目录号\"},{\"name\":\"category_code\",\"title\":\"门类编码\",\"content\":\"WS·B\"},{\"name\":\"GDM\",\"title\":\"档案馆代码\"}]},{\"name\":\"访问控制信息\",\"property\":[{\"name\":\"security_class\",\"title\":\"密级\"},{\"name\":\"open_class\",\"title\":\"开放状态\"},{\"name\":\"secrecy_period\",\"title\":\"保密期限\"},{\"name\":\"released_network\",\"title\":\"发布网段\"},{\"name\":\"decryption_status\",\"title\":\"解密标识\"}]},{\"name\":\"说明信息\",\"property\":[{\"name\":\"subject\",\"title\":\"主题词\"},{\"name\":\"retention_period\",\"title\":\"保管期限\",\"content\":\"Y\"},{\"name\":\"fonds_name\",\"title\":\"全宗名称\"},{\"name\":\"GJC\",\"title\":\"关键词\"},{\"name\":\"remark\",\"title\":\"备注\"},{\"name\":\"job_no\",\"title\":\"工号\"},{\"name\":\"file_year\",\"title\":\"年度\",\"content\":\"2005\"},{\"name\":\"filed_by\",\"title\":\"归档人\"},{\"name\":\"archives_num\",\"title\":\"归档份数\",\"content\":\"1\"},{\"name\":\"filed_date\",\"title\":\"归档日期\"},{\"name\":\"file_department\",\"title\":\"归档部门\"},{\"name\":\"title\",\"title\":\"题名\",\"content\":\"县人大常委会、办公室关于2005年度审议议题的决定、意见、通知\"},{\"name\":\"checked_by\",\"title\":\"检查人\"},{\"name\":\"checked_date\",\"title\":\"检查日期\"},{\"name\":\"file_end_date\",\"title\":\"终止日期\",\"content\":\"2005-12-01T00:00\"},{\"name\":\"binding_method\",\"title\":\"装订方式\"},{\"name\":\"author\",\"title\":\"责任者\",\"content\":\"龙游县人民代表大会常务委员会\"},{\"name\":\"file_start_date\",\"title\":\"起始日期\",\"content\":\"2005-01-01T00:00\"},{\"name\":\"material_num\",\"title\":\"载体数量\"},{\"name\":\"carrier_type\",\"title\":\"载体类型\",\"content\":\"02\"},{\"name\":\"annotation\",\"title\":\"附注\"},{\"name\":\"doc_pages\",\"title\":\"页数\",\"content\":\"87\"},{\"name\":\"documents_in_volume\",\"title\":\"卷内文件份数\",\"content\":\"16\"},{\"name\":\"ZTGG\",\"title\":\"载体规格\"},{\"name\":\"MLJBF\",\"title\":\"目录级别符\"}]},{\"name\":\"管理信息\"}]},{\"name\":\"业务内容\",\"block\":{\"name\":\"过程信息\"}},{\"name\":\"电子文件\"}],\"metadata_scheme_code\":\"WS·B-VOLUME\"}}";
-        Map<String,Object> map = new HashMap<>();
-        map.put("载体规格","ztgg");
+        String a = "2023.D.03.Y-0001";
+        System.out.println(a.substring(a.lastIndexOf("-")+1));
 //        DocumentContext parse = updateJsonName(aa,map);
 //        System.out.println(parse.jsonString());
     }

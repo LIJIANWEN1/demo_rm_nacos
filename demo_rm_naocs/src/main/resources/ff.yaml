@@ -1,0 +1,33 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: zscy-jiangbei
+  namespace: app
+  labels:
+    app: zscy-jiangbei
+    app.kubernetes.io/managed-by: Helm
+    app.kubesphere.io/instance: app
+    chart: amberdata-app-2.0.0
+    release: app
+  annotations:
+    kubesphere.io/creator: admin
+    meta.helm.sh/release-name: app
+    meta.helm.sh/release-namespace: app
+spec:
+  ports:
+    - name: apiport
+      protocol: TCP
+      port: 7099
+      targetPort: 7099
+  selector:
+    app: zscy-jiangbei
+    release: app
+  clusterIP: 10.233.50.217
+  clusterIPs:
+    - 10.233.50.217
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster

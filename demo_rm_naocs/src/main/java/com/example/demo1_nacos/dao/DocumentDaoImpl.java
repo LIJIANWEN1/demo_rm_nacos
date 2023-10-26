@@ -1,6 +1,5 @@
 package com.example.demo1_nacos.dao;
 
-import cn.amberdata.common.response.exception.BusinessException;
 import cn.amberdata.dm.document.DocumentRepository;
 import cn.amberdata.dm.folder.Folder;
 import cn.amberdata.dm.folder.FolderRepository;
@@ -85,7 +84,7 @@ public class DocumentDaoImpl implements DocumentDao {
             documentRepository.store(fileDocument);
         } catch (Exception e) {
             LOGGER.error("挂接原文失败", e);
-            throw new BusinessException(e);
+//            throw new BusinessException(e);
         } finally {
             if (null != fileInputStream) {
                 try {

@@ -2,7 +2,6 @@ package com.example.demo1_nacos.service;
 import cn.amberdata.afc.api.object.IAfPersistentObject;
 import cn.amberdata.afc.api.object.IAfSysObject;
 import cn.amberdata.afc.common.util.AfSessionUtils;
-import cn.amberdata.common.response.exception.BusinessException;
 import cn.amberdata.dm.common.context.session.SessionContext;
 import cn.amberdata.dm.common.context.unit.UnitContext;
 import cn.amberdata.dm.common.domain.event.DomainEventPublisher;
@@ -225,7 +224,7 @@ public class RmOtherServiceImpl {
                     //循环门类id数组最后一个值时给出提示
                     if (idFroms.length - 1 == j) {
                         String categoryNames = categoryName.substring(0, categoryName.lastIndexOf(","));
-                        throw new BusinessException(ExceptionCode.CATEGORY_ALREADY_EXIST.getCode(), String.format("[%s]已存在，不可重复添加", categoryNames));
+//                        throw new BusinessException(ExceptionCode.CATEGORY_ALREADY_EXIST.getCode(), String.format("[%s]已存在，不可重复添加", categoryNames));
                     }
                     continue;
                 }
