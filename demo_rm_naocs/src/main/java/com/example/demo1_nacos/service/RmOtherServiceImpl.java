@@ -117,24 +117,25 @@ public class RmOtherServiceImpl {
 //        if(null != subCategoryDO){
 //            return "";
 //        }
-        SubCategory subCategory = subCategoryRepository.newEntity(command.getParentId(), command.getName(), command.getClassNumber(), command.getRetentionPolicyId(), command.getRetentionPeriodId(), command.getDescription(),
-                command.getCategoryId(), command.getClassificationCodePrefix(), false);
-        new ClassNumberSpecification().isSatisfiedBy(subCategory);
-        //子类目继承父类目的整理方式和门类id或继承父门类的id
-        Class<? extends IAfPersistentObject> parentType = SessionContext.getSession().getAfSession().getObjectType(command.getParentId());
-        if (parentType == SubCategory.class) {
-            SubCategory parentSubCategory = subCategoryRepository.find(command.getParentId());
-            ClassWhetherOperatedSpecification specification = new ClassWhetherOperatedSpecification();
-            specification.isSatisfiedBy(parentSubCategory);
-            subCategory.inheritParent(parentSubCategory.getCollectionWay().asValue(), parentSubCategory.getCategoryId());
-        } else if (parentType == Category.class) {
-            Category parentCategory = categoryRepository.find(command.getParentId());
-            subCategory.inheritParent(parentCategory.getCollectionWay().asValue(), parentCategory.getObjectId().getId());
-        }
-        SubCategoryCreateSpecification specification = new SubCategoryCreateSpecification(subCategoryRepository, retentionStrategyRepository, recordMapper, volumeMapper);
-        specification.isSatisfiedBy(subCategory);
-        subCategoryRepository.store(subCategory);
-        return subCategory.getObjectId().getId();
+//        SubCategory subCategory = subCategoryRepository.newEntity(command.getParentId(), command.getName(), command.getClassNumber(), command.getRetentionPolicyId(), command.getRetentionPeriodId(), command.getDescription(),
+//                command.getCategoryId(), command.getClassificationCodePrefix(), false);
+//        new ClassNumberSpecification().isSatisfiedBy(subCategory);
+//        //子类目继承父类目的整理方式和门类id或继承父门类的id
+//        Class<? extends IAfPersistentObject> parentType = SessionContext.getSession().getAfSession().getObjectType(command.getParentId());
+//        if (parentType == SubCategory.class) {
+//            SubCategory parentSubCategory = subCategoryRepository.find(command.getParentId());
+//            ClassWhetherOperatedSpecification specification = new ClassWhetherOperatedSpecification();
+//            specification.isSatisfiedBy(parentSubCategory);
+//            subCategory.inheritParent(parentSubCategory.getCollectionWay().asValue(), parentSubCategory.getCategoryId());
+//        } else if (parentType == Category.class) {
+//            Category parentCategory = categoryRepository.find(command.getParentId());
+//            subCategory.inheritParent(parentCategory.getCollectionWay().asValue(), parentCategory.getObjectId().getId());
+//        }
+//        SubCategoryCreateSpecification specification = new SubCategoryCreateSpecification(subCategoryRepository, retentionStrategyRepository, recordMapper, volumeMapper);
+//        specification.isSatisfiedBy(subCategory);
+//        subCategoryRepository.store(subCategory);
+//        return subCategory.getObjectId().getId();
+        return "";
     }
 
     public String createRetentionStrategy(String unitId,String policyPath){
@@ -157,109 +158,109 @@ public class RmOtherServiceImpl {
     private AbstractArchiveRepository abstractArchiveRepository;
 
     public void syncPlatformData(String parentId,String synParentId){
-        SessionContext.setSession(SessionUtil.getAdminSession());
-        IAfSysObject afSysObject = sysObjectRepository.find(synParentId);
-        QueryWrapper<SysObjectDO> queryWrapper = new QueryWrapper<>();
-        queryWrapper.likeRight("s_parent_id", parentId).notLike("s_link_ids","%"+synParentId+"%").eq("archive_type","da_record");
-        List<SysObjectDO> records = sysObjectMapper.findByWrapper(queryWrapper, new Page<>(1, 50000)).getRecords();
-        for( SysObjectDO sysObjectDO:records) {
-            AbstractArchive abstractArchive = abstractArchiveRepository.find(sysObjectDO.getId());
-                abstractArchive.sensitiveValidatePass("xxxx");
-                //检测通过，状态改为待同步
-                abstractArchive.syncAwait();
-            if (abstractArchive.getLinkParentPaths().contains(afSysObject.getObjectPath())) {
-                //如果已经link了同步库，跳过
-                continue;
-            }
-                abstractArchive.link(afSysObject.getObjectPath());
-            fixedThreadPool.execute(() -> {
-                try {
-                    abstractArchiveRepository.store(abstractArchive);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                System.out.println("--------");
-            });
+//        SessionContext.setSession(SessionUtil.getAdminSession());
+//        IAfSysObject afSysObject = sysObjectRepository.find(synParentId);
+//        QueryWrapper<SysObjectDO> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.likeRight("s_parent_id", parentId).notLike("s_link_ids","%"+synParentId+"%").eq("archive_type","da_record");
+//        List<SysObjectDO> records = sysObjectMapper.findByWrapper(queryWrapper, new Page<>(1, 50000)).getRecords();
+//        for( SysObjectDO sysObjectDO:records) {
+//            AbstractArchive abstractArchive = abstractArchiveRepository.find(sysObjectDO.getId());
+//                abstractArchive.sensitiveValidatePass("xxxx");
+//                //检测通过，状态改为待同步
+//                abstractArchive.syncAwait();
+//            if (abstractArchive.getLinkParentPaths().contains(afSysObject.getObjectPath())) {
+//                //如果已经link了同步库，跳过
+//                continue;
+//            }
+//                abstractArchive.link(afSysObject.getObjectPath());
+//            fixedThreadPool.execute(() -> {
+//                try {
+//                    abstractArchiveRepository.store(abstractArchive);
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//                System.out.println("--------");
+//            });
 
-        }
+//        }
     }
 
     public void create(CategoryCreateCommand command) {
-        SessionContext.setSession(SessionUtil.getAdminSession());
-        //获取本单位档案库文件夹路径
-        String archiveFilePath = command.getArchivePath();
-        Folder archiveFolder = folderRepository.findByPath(archiveFilePath);
-        //获取元数据门类
-        String[] idFroms = command.getIdFromMetadata().split(",");
-        //根据元数据平台的门类，保存相应的结构，用list集合把数据放进来
-        StringBuilder categoryName = new StringBuilder();
-        for (int j = 0; j < idFroms.length; j++) {
-            List<MetadataCategory> metadataCategoryList = metadataCategoryRepository.getIterationMetadataCategoryListById(idFroms[j]);
-            //拼接父门类编码
-            StringBuilder code = new StringBuilder();
-            for (int i = metadataCategoryList.size() - 1; i >= 0; i--) {
-                if (i > 0) {
-                    code.append(metadataCategoryList.get(i).getCode()).append("·");
-                } else {
-                    code.append(metadataCategoryList.get(i).getCode());
-                }
-            }
-            String codePrefix = "";
-            if (code.toString().contains("·")) {
-                //父门类编码
-                codePrefix = code.substring(0, code.lastIndexOf("·"));
-            }
-            //循环里会赋值当前门类的父id,第一次为档案库的id
-            String parentId = archiveFolder.getObjectId().getId();
-            for (int i = metadataCategoryList.size() - 1; i >= 0; i--) {
-                MetadataCategory metadataCategory = metadataCategoryList.get(i);
-                //如果当前路径下已经存在相同门类，则无需创建，父id赋值为已存在门类id并跳过本次循环
-                Category codeExistCategory = categoryRepository.findCategoryByCodeAndParentId(metadataCategory.getCode(), parentId);
-                if (null != codeExistCategory && i != 0) {
-                    parentId = codeExistCategory.getObjectId().getId();
-                    continue;
-                } else if (null != codeExistCategory) {
-                    parentId = codeExistCategory.getObjectId().getId();
-                    //拼接所有已存在的门类名称用于给出提示
-                    categoryName.append(codeExistCategory.getName()).append(",");
-                    //循环门类id数组最后一个值时给出提示
-                    if (idFroms.length - 1 == j) {
-                        String categoryNames = categoryName.substring(0, categoryName.lastIndexOf(","));
-                        throw new BusinessException(ExceptionCode.CATEGORY_ALREADY_EXIST.getCode(), String.format("[%s]已存在，不可重复添加", categoryNames));
-                    }
-                    continue;
-                }
-                Category category;
-                //如果该门类为顶级节点 那么前缀设置为null
-                if (metadataCategory.getTop()) {
-                    category = categoryRepository.newEntity(metadataCategory.getCode(), metadataCategory.getName(),
-                            metadataCategory.getCode() + "." + metadataCategory.getName(), command.getIdFromMetadata(),
-                            command.getSort(), command.getWarehouseNo(), command.getCollectionWay(), null);
-                } else {
-                    category = categoryRepository.newEntity(metadataCategory.getCode(), metadataCategory.getName(),
-                            metadataCategory.getCode() + "." + metadataCategory.getName(), command.getIdFromMetadata(),
-                            command.getSort(), command.getWarehouseNo(), command.getCollectionWay(), codePrefix);
-                }
-                //元数据门类赋值并设置门类父路径
-                category.assignValueByMetadataCategory(metadataCategory, parentId, null);
-                CategoryCreateSpecification specification = new CategoryCreateSpecification(metadataCategoryRepository);
-                specification.isSatisfiedBy(category);
-                //最底层门类绑定库房编号
-                category.bindWarehouse(command.getWarehouseNo());
-                //设置单位code
-                category.setUnitCode(command.getCode());
-                categoryRepository.store(category);
-                parentId = category.getObjectId().getId();
-            }
-            //标记引用元数据门类
-            metadataCategoryRepository.referenceCategoryByIds(Collections.singletonList(idFroms[j]));
-            //监听门类创建，叶子节点下创建初始类目
-            CategoryEvent categoryEvent = new CategoryEvent();
-            categoryEvent.setUnitId(command.getUnitId());
-            categoryEvent.setRetentionPolicyPath(command.getRetentionPolicyPath());
-            categoryEvent.setCategoryId(parentId);
-            DomainEventPublisher.publish(categoryEvent);
-        }
+//        SessionContext.setSession(SessionUtil.getAdminSession());
+//        //获取本单位档案库文件夹路径
+//        String archiveFilePath = command.getArchivePath();
+//        Folder archiveFolder = folderRepository.findByPath(archiveFilePath);
+//        //获取元数据门类
+//        String[] idFroms = command.getIdFromMetadata().split(",");
+//        //根据元数据平台的门类，保存相应的结构，用list集合把数据放进来
+//        StringBuilder categoryName = new StringBuilder();
+//        for (int j = 0; j < idFroms.length; j++) {
+//            List<MetadataCategory> metadataCategoryList = metadataCategoryRepository.getIterationMetadataCategoryListById(idFroms[j]);
+//            //拼接父门类编码
+//            StringBuilder code = new StringBuilder();
+//            for (int i = metadataCategoryList.size() - 1; i >= 0; i--) {
+//                if (i > 0) {
+//                    code.append(metadataCategoryList.get(i).getCode()).append("·");
+//                } else {
+//                    code.append(metadataCategoryList.get(i).getCode());
+//                }
+//            }
+//            String codePrefix = "";
+//            if (code.toString().contains("·")) {
+//                //父门类编码
+//                codePrefix = code.substring(0, code.lastIndexOf("·"));
+//            }
+//            //循环里会赋值当前门类的父id,第一次为档案库的id
+//            String parentId = archiveFolder.getObjectId().getId();
+//            for (int i = metadataCategoryList.size() - 1; i >= 0; i--) {
+//                MetadataCategory metadataCategory = metadataCategoryList.get(i);
+//                //如果当前路径下已经存在相同门类，则无需创建，父id赋值为已存在门类id并跳过本次循环
+//                Category codeExistCategory = categoryRepository.findCategoryByCodeAndParentId(metadataCategory.getCode(), parentId);
+//                if (null != codeExistCategory && i != 0) {
+//                    parentId = codeExistCategory.getObjectId().getId();
+//                    continue;
+//                } else if (null != codeExistCategory) {
+//                    parentId = codeExistCategory.getObjectId().getId();
+//                    //拼接所有已存在的门类名称用于给出提示
+//                    categoryName.append(codeExistCategory.getName()).append(",");
+//                    //循环门类id数组最后一个值时给出提示
+//                    if (idFroms.length - 1 == j) {
+//                        String categoryNames = categoryName.substring(0, categoryName.lastIndexOf(","));
+//                        throw new BusinessException(ExceptionCode.CATEGORY_ALREADY_EXIST.getCode(), String.format("[%s]已存在，不可重复添加", categoryNames));
+//                    }
+//                    continue;
+//                }
+//                Category category;
+//                //如果该门类为顶级节点 那么前缀设置为null
+////                if (metadataCategory.getTop()) {
+////                    category = categoryRepository.newEntity(metadataCategory.getCode(), metadataCategory.getName(),
+////                            metadataCategory.getCode() + "." + metadataCategory.getName(), command.getIdFromMetadata(),
+////                            command.getSort(), command.getWarehouseNo(), command.getCollectionWay(), null);
+////                } else {
+////                    category = categoryRepository.newEntity(metadataCategory.getCode(), metadataCategory.getName(),
+////                            metadataCategory.getCode() + "." + metadataCategory.getName(), command.getIdFromMetadata(),
+////                            command.getSort(), command.getWarehouseNo(), command.getCollectionWay(), codePrefix);
+////                }
+//                //元数据门类赋值并设置门类父路径
+//                category.assignValueByMetadataCategory(metadataCategory, parentId, null);
+//                CategoryCreateSpecification specification = new CategoryCreateSpecification(metadataCategoryRepository);
+//                specification.isSatisfiedBy(category);
+//                //最底层门类绑定库房编号
+//                category.bindWarehouse(command.getWarehouseNo());
+//                //设置单位code
+//                category.setUnitCode(command.getCode());
+//                categoryRepository.store(category);
+//                parentId = category.getObjectId().getId();
+//            }
+//            //标记引用元数据门类
+//            metadataCategoryRepository.referenceCategoryByIds(Collections.singletonList(idFroms[j]));
+//            //监听门类创建，叶子节点下创建初始类目
+//            CategoryEvent categoryEvent = new CategoryEvent();
+//            categoryEvent.setUnitId(command.getUnitId());
+//            categoryEvent.setRetentionPolicyPath(command.getRetentionPolicyPath());
+//            categoryEvent.setCategoryId(parentId);
+//            DomainEventPublisher.publish(categoryEvent);
+//        }
     }
 
     public String getFolderByPath(String path){

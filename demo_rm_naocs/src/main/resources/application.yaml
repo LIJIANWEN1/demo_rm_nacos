@@ -1,0 +1,13 @@
+server:
+  port: 8888
+  servlet:
+    context-path: /demoapi
+spring:
+  application:
+    name: demo
+  profiles:
+    active: 6.0
+  thymeleaf:
+    prefix: classpath:/static/
+    suffix: .html
+    cache: false

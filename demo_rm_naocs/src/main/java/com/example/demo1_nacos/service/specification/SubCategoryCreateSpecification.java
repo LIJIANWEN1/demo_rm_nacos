@@ -36,35 +36,35 @@ public class SubCategoryCreateSpecification extends AbstractSpecification<SubCat
 
     @Override
     public boolean isSatisfiedBy(SubCategory subCategory) {
-        //是否有特殊字符
-        String code = subCategory.getCode();
-        String dot = ".";
-        if (org.apache.commons.lang3.StringUtils.contains(code, dot)) {
-//            throw new BusinessException(ExceptionCode.EXIST_DOT);
-        }
-
-        if (subCategory.getCode() != null && subCategory.getParentId() != null) {
-            SubCategory exit = subCategoryRepository.findSubCategoryByCodeAndParentId(subCategory.getCode(), subCategory.getParentId());
-            if (exit != null) {
-//                throw new BusinessException(ExceptionCode.CLASS_NUM_EXIST_ERROR);
-            }
-        }
-        //判断父类目、门类下是否有案卷,record
-        if (CollectionWay.COLLECTION_WAY_VOLUME.equals(subCategory.getCollectionWay())) {
-            if (!volumeMapper.childIdBySubCategoryId(subCategory.getParentId()).isEmpty()) {
-//                throw new BusinessException(ExceptionCode.VOLUME_EXIST_ON_CATEGORY_ERROR);
-            }
-        }
-        if (CollectionWay.COLLECTION_WAY_RECORD.equals(subCategory.getCollectionWay())) {
-            if (!recordMapper.childIdBySubCategoryId(subCategory.getParentId()).isEmpty()) {
-//                throw new BusinessException(ExceptionCode.RECORD_EXIST_ON_CATEGORY_ERROR);
-            }
-        }
-        //判断保留策略是否存在
-        RetentionStrategy retentionStrategy = retentionStrategyRepository.find(subCategory.getRetentionPolicyId());
-        if (null == retentionStrategy || null == retentionStrategy.getObjectName()) {
-//            throw new BusinessException(ExceptionCode.RESOURCES_BAD_REQUEST_ERROR);
-        }
+//        //是否有特殊字符
+//        String code = subCategory.getCode();
+//        String dot = ".";
+//        if (org.apache.commons.lang3.StringUtils.contains(code, dot)) {
+////            throw new BusinessException(ExceptionCode.EXIST_DOT);
+//        }
+//
+//        if (subCategory.getCode() != null && subCategory.getParentId() != null) {
+//            SubCategory exit = subCategoryRepository.findSubCategoryByCodeAndParentId(subCategory.getCode(), subCategory.getParentId());
+//            if (exit != null) {
+////                throw new BusinessException(ExceptionCode.CLASS_NUM_EXIST_ERROR);
+//            }
+//        }
+//        //判断父类目、门类下是否有案卷,record
+//        if (CollectionWay.COLLECTION_WAY_VOLUME.equals(subCategory.getCollectionWay())) {
+//            if (!volumeMapper.childIdBySubCategoryId(subCategory.getParentId()).isEmpty()) {
+////                throw new BusinessException(ExceptionCode.VOLUME_EXIST_ON_CATEGORY_ERROR);
+//            }
+//        }
+//        if (CollectionWay.COLLECTION_WAY_RECORD.equals(subCategory.getCollectionWay())) {
+//            if (!recordMapper.childIdBySubCategoryId(subCategory.getParentId()).isEmpty()) {
+////                throw new BusinessException(ExceptionCode.RECORD_EXIST_ON_CATEGORY_ERROR);
+//            }
+//        }
+//        //判断保留策略是否存在
+//        RetentionStrategy retentionStrategy = retentionStrategyRepository.find(subCategory.getRetentionPolicyId());
+//        if (null == retentionStrategy || null == retentionStrategy.getObjectName()) {
+////            throw new BusinessException(ExceptionCode.RESOURCES_BAD_REQUEST_ERROR);
+//        }
         return true;
     }
 }
