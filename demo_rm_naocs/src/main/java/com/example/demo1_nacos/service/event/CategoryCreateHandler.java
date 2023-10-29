@@ -60,34 +60,34 @@ public class CategoryCreateHandler implements DomainEventSubscriber<CategoryEven
 
     @Override
     public void handle(CategoryEvent event) {
-        Category category = categoryRepository.find(event.getCategoryId());
-        //判断该门类下初始类目是否已经存在，不存在新建
-        SubCategoryDO subCategoryDO = subCategoryMapper.findByPath(category.getObjectPath() + "/" + DEFAULT_CLASS_CODE + "." + DEFAULT_CLASS_NAME);
-        if (null == subCategoryDO) {
-            //获取元数据平台保管期限为永久的代码项id
-            String retentionPeriodId = "";
-            List<MetadataCodeItem> itemList = metadataCodeItemRepository.getMetadataCodeItem(RETENTION_PERIOD).stream().filter(v -> StringUtils.equals(PERPETUAL, v.getName())).collect(Collectors.toList());
-            if (CollectionUtils.isNotEmpty(itemList)) {
-                retentionPeriodId = itemList.get(0).getId();
-            }
-            //获取默认的保留处置策略id，不存在新建
-            String retentionStrategyId;
-            RetentionStrategyDO retentionStrategyDO = retentionStrategyMapper.findBySignAndName(event.getUnitId(), DEFAULT_POLICY_NAME);
-            if (null != retentionStrategyDO) {
-                retentionStrategyId = retentionStrategyDO.getId();
-            } else {
-                RetentionStrategy retentionStrategy = retentionStrategyRepository.newEntity(DEFAULT_POLICY_NAME, UnitContext.getObject().getObjectId().getId(),
-                        RetentionStrategyStyle.CUSTOM, 10, DEFAULT_DISPOSAL_DATE,
-                        DisposalType.TRANSFER, 1, event.getRetentionPolicyPath());
-                //存储保留处置策略
-                retentionStrategyRepository.store(retentionStrategy);
-                retentionStrategyId = retentionStrategy.getObjectId().getId();
-            }
-            //创建初始化类目
-            SubCategory subCategory = subCategoryRepository.newEntity(category.getObjectId().getId(), DEFAULT_CLASS_NAME, DEFAULT_CLASS_CODE, retentionStrategyId, retentionPeriodId, "",
-                    category.getObjectId().getId(), null, true);
-            subCategory.inheritParent(category.getCollectionWay().asValue(), category.getObjectId().getId());
-            subCategoryRepository.store(subCategory);
-        }
+//        Category category = categoryRepository.find(event.getCategoryId());
+//        //判断该门类下初始类目是否已经存在，不存在新建
+//        SubCategoryDO subCategoryDO = subCategoryMapper.findByPath(category.getObjectPath() + "/" + DEFAULT_CLASS_CODE + "." + DEFAULT_CLASS_NAME);
+//        if (null == subCategoryDO) {
+//            //获取元数据平台保管期限为永久的代码项id
+//            String retentionPeriodId = "";
+//            List<MetadataCodeItem> itemList = metadataCodeItemRepository.getMetadataCodeItem(RETENTION_PERIOD).stream().filter(v -> StringUtils.equals(PERPETUAL, v.getName())).collect(Collectors.toList());
+//            if (CollectionUtils.isNotEmpty(itemList)) {
+//                retentionPeriodId = itemList.get(0).getId();
+//            }
+//            //获取默认的保留处置策略id，不存在新建
+//            String retentionStrategyId;
+//            RetentionStrategyDO retentionStrategyDO = retentionStrategyMapper.findBySignAndName(event.getUnitId(), DEFAULT_POLICY_NAME);
+//            if (null != retentionStrategyDO) {
+//                retentionStrategyId = retentionStrategyDO.getId();
+//            } else {
+//                RetentionStrategy retentionStrategy = retentionStrategyRepository.newEntity(DEFAULT_POLICY_NAME, UnitContext.getObject().getObjectId().getId(),
+//                        RetentionStrategyStyle.CUSTOM, 10, DEFAULT_DISPOSAL_DATE,
+//                        DisposalType.TRANSFER, 1, event.getRetentionPolicyPath());
+//                //存储保留处置策略
+//                retentionStrategyRepository.store(retentionStrategy);
+//                retentionStrategyId = retentionStrategy.getObjectId().getId();
+//            }
+//            //创建初始化类目
+//            SubCategory subCategory = subCategoryRepository.newEntity(category.getObjectId().getId(), DEFAULT_CLASS_NAME, DEFAULT_CLASS_CODE, retentionStrategyId, retentionPeriodId, "",
+//                    category.getObjectId().getId(), null, true);
+//            subCategory.inheritParent(category.getCollectionWay().asValue(), category.getObjectId().getId());
+//            subCategoryRepository.store(subCategory);
+//        }
     }
 }
