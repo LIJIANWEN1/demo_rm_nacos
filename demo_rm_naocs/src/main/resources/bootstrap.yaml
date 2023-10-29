@@ -1,0 +1,21 @@
+spring:
+  application:
+    ## 按照各自项目来配置
+    name: demo
+  cloud:
+    kubernetes:
+      reload:
+        enabled: false
+        mode: polling
+        period: 5000
+      config:
+        sources:
+          - name: ${spring.application.name}-configmap
+            namespace: ${NAMESPACE}
+    nacos:
+      config:
+        file-extension: yaml
+        server-addr: nacos.amberdata.cn:8848
+        namespace: ${NACOS_NAMESPACE}
+        username: nacos
+        password: Dctm@1234
