@@ -2,6 +2,7 @@ package com.example.demo1_nacos.controller;
 import com.example.demo1_nacos.service.ArchiveServiceImpl;
 import com.example.demo1_nacos.service.ZzdServiceImpl;
 import com.example.demo1_nacos.util.ChangeCharset;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +25,11 @@ public class ZzdController {
     @Resource
     private ZzdServiceImpl zzdService;
 
-    @GetMapping("/zzd")
-    public boolean zzd(@RequestParam String code, @RequestParam String admin_tenantid) {
-        zzdService.orgHaveUsers(code,admin_tenantid);
+    @GetMapping("/ss")
+    @Scheduled(cron = "0 0/1 * * * ?")
+    public boolean zzd() {
+        System.out.println("xxxxxxxx");
+        zzdService.getOrgDetail("GO_603c931ab33d43a0b9b8a21878ab9651","196729");
         return true;
     }
 

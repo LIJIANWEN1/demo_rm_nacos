@@ -1,0 +1,186 @@
+spring:
+  datasource:
+    db: mysql
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://mysql.base.svc.cluster.local:3306/admin-backend?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+      username: root
+      password: Dctm@1234
+      initial-size: 30
+      max-active: 100
+      min-idle: 30
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: false
+        wall:
+          config:
+            multi-statement-allow: true
+  redis:
+    database: 0
+    host: redis.base.svc.cluster.local
+    port: 6379
+    password: Dctm@1234
+  elasticsearch:
+    rest:
+      uris: http://elasticsearch.base.svc.cluster.local:9200
+      username: admin
+      password: Dctm@1234
+dubbo:
+  application:
+    metadata-service-protocol: tri
+    register-mode: instance
+  protocol:
+    name: tri
+    port: 58001
+  registry:
+    address: zookeeper://zk-cs.base.svc.cluster.local:2181?client=curator #修改点1
+cn:
+  amberdata:
+    sms:
+      message-project: xx
+      end-point: xxx
+      access-key: xxx
+      secret-key: xx
+      srcnum: 3336
+    boot:
+      blobstore:
+        spring:
+          boot:
+            blob-store-impl-name: MinIOBlobStore
+            primaryBId: 1
+            routeStrategy: random
+            store-nodes: #修改点2
+              - bId: 1
+                access-key: admin
+                bucket-name: admin
+                end-point: http://minio.base.svc.cluster.local:9000
+                secret-key: Dctm@1234
+    rocketmq:
+      producer:
+        group-name: admin-group
+        namesrv-addr: rocketmq.base.svc.cluster.local:9876
+        max-message-size: 102400
+        send-msg-timeout: 3000
+        retry-times-when-send-failed: 2
+    mq:
+      enable: true
+    sso:
+      login-domain: http://10.68.190.225:84
+      backend-uri-check: true
+      white-header-enable: false
+      white-header-host:
+      white-redirect-enable: false
+      white-redirect-host:
+      default-redirect-url:
+      security-xss-enable: true
+    cdn:
+      host: http://10.68.190.225:84/cdn/
+    index:
+      hash: c2f404cb,a0d9b057,577b0674,fce94c80,aeb3e857,aefe249c,[gitBranch=develop]-[gitUser=cuimt]-[打包时间=2023-09-05 11:26]-[COMMIT_SHA=406191c6503424f4c3b208d8dd4de2ffebecc8fd]
+    login:
+      hash: 130fd318f67451f7c7476,80ab492fe3d778817936,f0dde84cf7a460c8b133,7ff3fc35f9bdbaf81d86,dc2e03ff92d3dd705931,165b5d8713a4efddd64b,[gitBranch=new_sso]-[gitUser=chenlongwei]-[打包时间=2023-08-12 10:45]-[COMMIT_SHA=f6634aa408b0b42e9ff9e71989e605c9c7887256]
+spi:
+  org_user:
+    enable: false
+  jar:
+    dir:
+      org_user: /usr/spi
+name:
+  admin: 江北区档案
+
+auth:
+  enable:
+  config :
+    zzd_scan:
+      app:
+        code: so
+        sign: hzdazhfw_dingoa
+        redirect_url: http://172.18.48.191
+sync:
+  zzd:
+    app:
+      key: xsszdazhfw-60Azs2KbKJnPvb6V7Zj
+      secret: sg2719ZRarv82E2M3w9577txI0not2tDOmXW1lF0
+      protocol: https
+      domain: openplatform-pro.ding.zj.gov.cn
+      adminTenantId: 196729
+      callBack:
+        enable: false
+        host: http://202.101.162.69:22080/adminapi/sync
+ext:
+  plugin:
+    enable: zzd_scan
+    sso:
+      config:
+        hlt:
+          auth_fail:
+            pc: xxx
+            app: xxx
+          api_host: hxx
+          app_key: xx
+          app_secret: xxp
+          app_code: Axx
+        zlb2:
+          service:
+            code: xx
+            pwd: xxx
+            immediateSysUser: true
+        zlb_wechat:
+          url:
+            token: xx
+            user: x
+          appid: x
+          ak: x
+          sk: x
+          immediateSysUser: true
+        zzd:
+          service:
+            code: code
+            pwd: pwd
+        csdn:
+          appid: appid
+          secret: secret
+        zzd_scan:
+          key: xsszdazhfw_dingoa-20tBLuaQ73Er
+          secret: 6s1Z0Nq5eI68N20ZghNWlf271L4gZ90fIjHyjz3L
+          client: xsszdazhfw
+          redirect: http://10.71.147.185/adminapi/sso/authSuccess/zzd_scan/so
+          immediateSysUser: true
+        zzd_free:
+          key: xsszdazhfw-60Azs2KbKJnPvb6V7Zj
+          secret: sg2719ZRarv82E2M3w9577txI0not2tDOmXW1lF0
+application:
+  data_filter: true
+  permission:
+    enable: false
+    tactics: FULL  #FULL OR VAGUE
+  spi:
+    enable: false
+    jar_dir: /usr/spi  #容器中jar包放置路径，需要映射到宿主以方便更换
+logging:
+  level:
+    cn:
+      amberdata:
+        admin:
+          root: info
+          authentication: info
+com:
+  alipay:
+    sofa:
+      sofamq:
+        config:
+          topic: TP_ADMIN_NEW
