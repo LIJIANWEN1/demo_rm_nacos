@@ -199,6 +199,10 @@
                     <artifactId>common-response</artifactId>
                     <groupId>cn.amberdata.common</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>esdk-obs-java-bundle</artifactId>
+                    <groupId>com.huaweicloud</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
 

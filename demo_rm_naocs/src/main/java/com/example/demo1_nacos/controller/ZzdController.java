@@ -25,12 +25,12 @@ public class ZzdController {
     @Resource
     private ZzdServiceImpl zzdService;
 
-    @GetMapping("/ss")
-    @Scheduled(cron = "0 0/1 * * * ?")
-    public boolean zzd() {
-        System.out.println("xxxxxxxx");
-        zzdService.getOrgDetail("GO_603c931ab33d43a0b9b8a21878ab9651","196729");
-        return true;
-    }
+//    @GetMapping("/ss")
+//    @Scheduled(cron = "0 0/1 * * * ?")
+//    public boolean zzd() {
+//        System.out.println("xxxxxxxx");
+//        zzdService.getOrgDetail("GO_603c931ab33d43a0b9b8a21878ab9651","196729");
+//        return true;
+//    }
 
 }

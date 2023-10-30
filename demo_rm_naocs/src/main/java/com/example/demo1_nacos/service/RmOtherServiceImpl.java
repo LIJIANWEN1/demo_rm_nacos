@@ -29,6 +29,9 @@ import cn.amberdata.rm.metadata.info.MetadataSchemeInfo;
 import cn.amberdata.rm.metadata.info.MetadataSchemeInfoRepository;
 import cn.amberdata.rm.metadata.itemcode.MetadataCodeItem;
 import cn.amberdata.rm.metadata.itemcode.MetadataCodeItemRepository;
+import cn.amberdata.rm.physicalmanagement.physical.PhysicalArchiveItem;
+import cn.amberdata.rm.physicalmanagement.physical.PhysicalArchiveItemRepository;
+import cn.amberdata.rm.physicalmanagement.physical.PhysicalArchiveItemRepositoryImpl;
 import cn.amberdata.rm.settings.strategy.RetentionStrategy;
 import cn.amberdata.rm.settings.strategy.RetentionStrategyDO;
 import cn.amberdata.rm.settings.strategy.RetentionStrategyRepository;
@@ -67,6 +70,9 @@ public class RmOtherServiceImpl {
 
     @Resource
     private FolderRepository folderRepository;
+
+    @Resource
+    private PhysicalArchiveItemRepository physicalArchiveItemRepository;
 
     @Resource
     private SubCategoryMapper subCategoryMapper;
@@ -329,6 +335,11 @@ public class RmOtherServiceImpl {
 
     }
 
+    public void destroyPhysicalArchiveItem(String id ) {
+        PhysicalArchiveItem physicalArchiveItem = physicalArchiveItemRepository.find(id);
+        physicalArchiveItemRepository.destroy(physicalArchiveItem);
+        System.out.println("删除--------------");
+    }
 
     public SubCategory getSubCategoryByClassRule(String rule, String parentId, Map<String, String> singleMap,String categoryId){
         Map<String,String> year = new HashMap<>();

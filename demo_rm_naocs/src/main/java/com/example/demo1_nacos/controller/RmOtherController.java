@@ -98,6 +98,14 @@ public class RmOtherController {
         rmOtherService.syncPlatformData(parentId,synParentId);
     }
 
+    @ApiOperation(value = "删除实体档案")
+    @GetMapping("/delete_phy")
+    void syncPlatformData(String id){
+        rmOtherService.destroyPhysicalArchiveItem(id);
+    }
+
+
+
 
 
 
