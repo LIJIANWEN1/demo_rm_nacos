@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>数字档案室</title>
+    <base href="/ermsapi/index/">
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0"/>
+    <link rel="icon" type="image/x-icon" th:href="@{ {host}/erms/favicon.ico(host=${cdnHost}) }"/>
+    <link rel="stylesheet" th:href="@{ ${cdnHost} +'/erms/styles.'+ ${hash.get(0)} + '.css' }"/>
+    <script>
+        /*<![CDATA[*/
+        window['cdnUrl'] = "[[${cdnHost}]]"
+        /*]]>*/
+    </script>
+</head>
+<body>
+<app-root></app-root>
+<script th:src="@{ ${cdnHost} + '/erms/runtime-es2015.' + ${hash.get(1)} + '.js' }" type="module"></script>
+<script th:src="@{ ${cdnHost} + '/erms/runtime-es5.' + ${hash.get(2)} + '.js'}" nomodule defer></script>
+<script th:src="@{ ${cdnHost} + '/erms/polyfills-es5.' + ${hash.get(3)} + '.js'}" nomodule defer></script>
+<script th:src="@{ ${cdnHost} + '/erms/polyfills-es2015.' + ${hash.get(4)} + '.js'}" type="module"></script>
+<script th:src="@{ ${cdnHost} + '/erms/scripts.' + ${hash.get(5)} + '.js'}" defer></script>
+<script th:src="@{ ${cdnHost} + '/erms/main-es2015.' + ${hash.get(6)} + '.js'}" type="module"></script>
+<script th:src="@{ ${cdnHost} + '/erms/main-es5.' + ${hash.get(7)} + '.js'}" nomodule defer></script>
+
+</body>
+</html>

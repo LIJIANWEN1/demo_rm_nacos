@@ -1,0 +1,9 @@
+/match_rule/convert_GET>NOT_LOGIN
+/error>NOT_LOGIN
+/rm_archive/**>NOT_LOGIN
+/zzd/**>NOT_LOGIN
+/update_archive/**>NOT_LOGIN
+/rm_archive_other/**>NOT_LOGIN
+/hello/nifi_commit>NOT_LOGIN
+/swagger-ui.html>NOT_LOGIN
+/v2/api-docs>NOT_LOGIN
