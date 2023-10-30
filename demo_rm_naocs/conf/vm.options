@@ -1,5 +1,0 @@
--XX:+PrintGC
--XX:+PrintGCDetails
--XX:+HeapDumpOnOutOfMemoryError
--XX:HeapDumpPath=/logs/
--XX:ErrorFile=/logs/hs_err_pid_%p.log

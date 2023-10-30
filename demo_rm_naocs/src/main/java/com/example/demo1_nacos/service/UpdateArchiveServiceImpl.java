@@ -1,10 +1,6 @@
 package com.example.demo1_nacos.service;
 import cn.amberdata.cache.CacheTemplate;
 import cn.amberdata.common.contenttransfer.ContentTransfer;
-import cn.amberdata.common.util.excel.old.ExcelUtils;
-import cn.amberdata.common.util.httpclient.HttpClientUtil;
-import cn.amberdata.common.util.zip.CompressUtils;
-import cn.amberdata.common.util.zip.ZipFileUtil;
 import cn.amberdata.dm.common.context.session.SessionContext;
 import cn.amberdata.dm.document.DocumentDO;
 import cn.amberdata.dm.session.SessionUtil;
