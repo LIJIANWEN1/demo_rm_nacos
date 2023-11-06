@@ -24,6 +24,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
+import org.junit.Test;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -42,8 +43,8 @@ public class ArchiveServiceImpl {
     @Resource
     private CacheTemplate cacheTemplate;
 
-    private static String appKey = "2b1e37d32079c22135c2f4657eb6378f";
-    private static String appSecret = "101aa9a0ce675b47c30cb19884e0959ff";
+    private static String appKey = "api7d92fac76760820dacaaa37764f94726";
+    private static String appSecret = "6002afe9c9af68a022112feaf8158af8";
 
     private static String ip = "192.168.10.77";
 
@@ -63,6 +64,11 @@ public class ArchiveServiceImpl {
 
     public void readExcel() throws Exception {
     }
+
+    public static void main(String[] args) throws Exception {
+        generateMetadataPackage();
+    }
+
     public static String generateMetadataPackage() throws Exception {
         String token = getToken();
         System.out.println("--------1.获取token--------"+token);
@@ -121,95 +127,17 @@ public class ArchiveServiceImpl {
     }
 
     public static YCResult getCertificateList(String token) {
-        String url = "https://yiqbdatatest.superboss.cc/reimburse/certificate/queryListPage.rjson?appKey=" + appKey + "&accessToken=" + token;
+        String url = "https://yiqbdata.superboss.cc/reimburse/certificate/queryListPage.rjson?appKey=" + appKey + "&accessToken=" + token;
         Map<String, Object> map = new HashMap<>(2);
-        map.put("accountCode", "1584244570835057173");
+        map.put("accountCode", "YCBX");
         map.put("status",1);
-        map.put("businessTyep","file");
+        map.put("businessType","file");
+        map.put("beginTime", "2023-10-20 00:00:00");
+        map.put("endTime", "2023-10-31 24:00:00");
 //        map.put("beginTime", new SimpleDateFormat("yyyy-MM-DD").format(new Date()) + " 00:00:00");
 //        map.put("endTime", new SimpleDateFormat("yyyy-MM-DD").format(new Date()) + " 24:00:00");
         map.put("pageSize", 10);
         String jsonStr = HttpClientUtil.doPostJson(url, JSON.toJSONString(map));
-//        String jsonStr = "{\n" +
-//                "    \"  apiName\": \"nguyet.goodwin\",\n" +
-//                "    \"result\": 100,\n" +
-//                "    \"message\": \"success\",\n" +
-//                "    \"data\": {\n" +
-//                "        \"success\": true,\n" +
-//                "        \"list\": [\n" +
-//                "            {\n" +
-//                "                \"certificateId\": 851,\n" +
-//                "                \"certificateWord\": \"c73cfj\",\n" +
-//                "                \"certificateDate\": \"2022-01-19\",\n" +
-//                "                \"certificateCode\": 374,\n" +
-//                "                \"documentMaker\": \"mvzsk5\",\n" +
-//                "                \"entryList\": [\n" +
-//                "                    {\n" +
-//                "                        \"journalizing\": 107,\n" +
-//                "                        \"abstractName\": \"nguyet.goodwin\",\n" +
-//                "                        \"subjectCode\": \"23790\",\n" +
-//                "                        \"subjectCodeExt\": \"motrgo\",\n" +
-//                "                        \"subjectName\": \"nguyet.goodwin\",\n" +
-//                "                        \"subjectNameExt\": \"aepxbv\",\n" +
-//                "                        \"direction\": 564,\n" +
-//                "                        \"borrowMoney\": 460,\n" +
-//                "                        \"loanMoney\": 574,\n" +
-//                "                        \"amount\": 31.53,\n" +
-//                "                        \"unit\": \"rw04mr\",\n" +
-//                "                        \"unitPrice\": 25.8,\n" +
-//                "                        \"auxiliaryList\": [\n" +
-//                "                            {\n" +
-//                "                                \"categoryCode\": \"23790\",\n" +
-//                "                                \"categoryName\": \"nguyet.goodwin\",\n" +
-//                "                                \"itemCode\": \"23790\",\n" +
-//                "                                \"itemName\": \"nguyet.goodwin\"\n" +
-//                "                            }\n" +
-//                "                        ]\n" +
-//                "                    }\n" +
-//                "                ],\n" +
-//                "                \"orderInfoList\": [\n" +
-//                "                    {\n" +
-//                "                        \"orderCode\": \"23790\",\n" +
-//                "                        \"orderName\": \"nguyet.goodwin\",\n" +
-//                "                        \"orderType\": \"hx8m6u\",\n" +
-//                "                        \"templateName\": \"nguyet.goodwin\",\n" +
-//                "                        \"submitAmount\": 87.97,\n" +
-//                "                        \"department\": \"h6y8kk\",\n" +
-//                "                        \"submitorName\": \"nguyet.goodwin\",\n" +
-//                "                        \"submitorJobNumber\": \"vxt2cs\",\n" +
-//                "                        \"componentAuxiliaryList\": [\n" +
-//                "                            {\n" +
-//                "                                \"code\": \"23790\",\n" +
-//                "                                \"name\": \"nguyet.goodwin\",\n" +
-//                "                                \"categoryCode\": \"23790\",\n" +
-//                "                                \"categoryName\": \"nguyet.goodwin\"\n" +
-//                "                            }\n" +
-//                "                        ],\n" +
-//                "                        \"payAccountInfo\": {\n" +
-//                "                            \"holdName\": \"nguyet.goodwin\",\n" +
-//                "                            \"bankName\": \"nguyet.goodwin\",\n" +
-//                "                            \"bankCardNum\": \"kj2rk1\"\n" +
-//                "                        }\n" +
-//                "                    }\n" +
-//                "                ]\n" +
-//                "            }\n" +
-//                "        ],\n" +
-//                "        \"count\": 325,\n" +
-//                "        \"errorMsg\": \"ilo76r\",\n" +
-//                "        \"extendMap\": {\n" +
-//                "            \"any object\": {}\n" +
-//                "        },\n" +
-//                "        \"nodeResponses\": [\n" +
-//                "            {\n" +
-//                "                \"nodeTemplateCode\": \"23790\",\n" +
-//                "                \"nodeTemplateName\": \"nguyet.goodwin\"\n" +
-//                "            }\n" +
-//                "        ],\n" +
-//                "        \"totalAmount\": 647,\n" +
-//                "        \"totalArriveAmount\": 408,\n" +
-//                "        \"totalNoArriveAmount\": 407\n" +
-//                "    }\n" +
-//                "}";
         YCResult ycResult = new Gson().fromJson(jsonStr, YCResult.class);
         System.out.println(ycResult);
         return ycResult;
@@ -380,7 +308,7 @@ public class ArchiveServiceImpl {
         String yc_token = "";
 //        String yc_token = cacheTemplate.get("YC_token");
         if (StringUtils.isBlank(yc_token)) {
-            String tokenUrl = "https://yiqbdatatest.superboss.cc/auth/getAccessToken.rjson";
+            String tokenUrl = "https://yiqbdata.superboss.cc/auth/getAccessToken.rjson";
             Map<String, String> map = new HashMap<>(2);
             map.put("appKey", appKey);
             map.put("appSecret", appSecret);
@@ -422,9 +350,8 @@ public class ArchiveServiceImpl {
         return null;
     }
 
-    public static void main(String[] args) throws Exception {
+//    public static void main(String[] args) throws Exception {
 
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 //        generateMetadataPackage();
 //        String  password = AESUtils.decrypt("HK1pIFZ5ALiqE499zVFyOA==");
 //
@@ -453,7 +380,7 @@ public class ArchiveServiceImpl {
 //            //通过上面那个方法获取json文件的内容
 //            exxx(file,excelOutFilePath);
 //        }
-    }
+//    }
 
     private static  String volumeStr = "档号，全宗号，目录号，案卷号，密级，发布网段，开放状态，提名，责任者，保管期限，年度，卷内文件份数，卷内页数，数字化状态，载体类型";
             private static  String itemStr = "档号，全宗号，目录号，案卷号，件号，密级，发布网段，开放状态，题名，责任者，保管期限，年度，载体类型，载体数量，\n" +
