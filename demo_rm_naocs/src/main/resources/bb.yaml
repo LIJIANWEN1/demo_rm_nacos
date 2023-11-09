@@ -1,295 +1,100 @@
-server:
-  port: 8888
-  servlet:
-    context-path: /ermsapi
 spring:
-  profiles:
-    active: dev
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-  messages:
-    basename: i18n/messages
-    encoding: UTF-8
-    fallbackToSystemLocale: true
-  thymeleaf:
-    prefix: classpath:/static/
-    suffix: .html
-    cache: false
-  jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
-    time-zone: GMT+8
-  redis:
-    database: 0
-    # 根据Redis部署地址更改IP
-    host: redis.base.svc.cluster.local
-    jedis:
-      pool:
-        max-active: 20
-        max-idle: 10
-        max-wait: -1
-        min-idle: 5
-    password: Dctm@1234
-    port: 6379
-  servlet:
-    multipart:
-      enabled: true
-      file-size-threshold: 100MB
-      location: /amberdata/erms/data
-      max-file-size: 5120MB
-      max-request-size: 5120MB
-  elasticsearch:
-    rest:
-      # 根据ES部署地址更改IP
-      uris: [ "elasticsearch.base.svc.cluster.local:9200" ]
-      username: admin
-      password: Dctm@1234
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    hikari:
-      auto-commit: true
-      connection-timeout: 30000
-      idle-timeout: 180000
-      max-lifetime: 1800000
-      maximum-pool-size: 100
-      minimum-idle: 10
-    password: Dctm@1234
-    # 根据Mysql部署地址更改IP
-    url: jdbc:mysql://mysql.base.svc.cluster.local:3306/ecmcore?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai
-    username: root
-logging:
-  path: ./logs
-  level:
-    root: INFO
-    org.hibernate: INFO
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    org.hibernate.type.descriptor.sql.BasicExtractor: TRACE
-cn:
-  amberdata:
-    # 档号特殊字符正则校验配置，目前是大小写字母、数字、【-】、【·】
-    #archive-id-verify: "[a-z0-9A-Z\\-·]+"
-    #archive-id-verify: "[a-z0-9A-Z\\-·()（）]+"
-    archive-id-verify:
-    archive-title: "[此件涉密，不扫描不挂接]"
-    archive-author: 空
-    archive-articleNumber: 空
-    archive-secret-level: L3,L4,L5,L6
-    archive-remark: 内部,秘密,机密,绝密
-    # 档案同步查档直通车topic，也可不进行配置，默认使用RECORD_SYNC_TO_PLATFORM
-    record-sync-topic: RECORD_SYNC_TO_PLATFORM
-    # 【涉密质检】涉密等级配置（密级标准代码项值，逗号分开），配置后的等级判定为涉密
-    secret-level: L2,L3
-
-    sso:
-      # 登录中心地址，根据admin部署地址更改IP
-      login-domain: http://10.68.190.225:84
-      expire-period: 1800
-    # CDN地址
-    cdn:
-      host: http://10.68.190.225:84/cdn/
-    index:
-      hash: 69d93eeaede037de3e38,c0d548d07bb0edbcd235,c0d548d07bb0edbcd235,b2af9beea1d3cd90971f,c929f2aec60b4e9be6e9,cc1dd6e0736d04be1da4,478729a39fdc21116b75,478729a39fdc21116b75,[gitBranch=release/V6.12.2]-[gitUser=zhuxl]-[打包时间=2023-09-13 17:46]-[COMMIT_SHA=be2c4d9de1b6f6d788ef92841be21f3bb84752fb]
-    rocketmq:
-      consumer:
-        # 组名，无需更改
-        group-name: GP_ERMS
-        # 配置mq消费者 IP（mq统一部署IP）
-        namesrv-addr: rocketmq.base.svc.cluster.local:9876
-        # 主题名，无需更改
-        topic: TP_ADMIN_NEW
-      producer:
-        group-name: erms-group
-        # 配置mq生产者 IP（mq统一部署IP）
-        namesrv-addr: rocketmq.base.svc.cluster.local:9876
-        #        sendMsgTimeout: 10000
-        max-message-size: 12582912
-        send-msg-time-out: 5000
-    config:
-      cache:
-        init-caches:
-          ermsapi-default:
-            name: default
-            ttl: -1
-          ermsapi-other:
-            name: other
-            ttl: -1
-    boot:
-      blobstore:
-        spring:
-          boot:
-            blob-store-impl-name: OSSBlobStore
-            primaryBId: 1
-            routeStrategy: random
-            store-nodes:
-              - bId: 1
-                end-point: MinIOBlobStore
-                access-key: admin
-                secret-key: Dctm@1234
-                bucket-name: erms
-                desc: erms
-    borrow:
-      roleName: 档案管理员
-    # 根据OCR  务部       址更改IP
-    ocr:
-      url: http://10.45.37.63:8868/predict/ocr_system
-    ocrUrl: http://10.45.37.63:8868/predict/ocr_system
-    asr:
-      url: ws://10.45.37.63:8090/paddlespeech/asr/streaming
-      # 是否开启文档打标功能
-    label-open: false
-    # 根据文件获取标签列表的接口地址
-    label-list-url: "http://192.168.10.205:17998/XS_pos"
-    label-list-by-http-url: "http://192.168.10.205:17998/pos_http"
-    # 是否开启档案著录和导入全宗号限制
-    fonds-restrict-open: false
-    # 智能鉴定NLP识别开放状态
-    nlp-predict-open-class: "http://192.168.10.205:18084/open-validation/predict"
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            #是否允许cookie跨域  true允许
+            allowCredentials: false
+            #允许跨域的url * 则允许全部
+            allowedOrigins: "*"
+            #允许跨域的header * 则允许全部
+            allowedHeaders: "*"
+            # 允许跨域的方法 * 则全部
+            allowedMethods:
+              - GET
+              - POST
+              - DELETE
+              - PUT
+              - OPTIONS
+      routes:
+        - id: "micro"
+          uri: "http://admin.app.svc.cluster.local:8888"
+          predicates:
+            - Path=/micro/**
+          filters:
+            - RewritePath=/micro/?(?<segment>.*),/adminapi/micro/$\{segment}
+        - id: "admin-backend"
+          uri: "http://admin.app.svc.cluster.local:8888"
+          predicates:
+            - Path=/adminapi/**
+        - id: "metadata"
+          uri: "http://metadata.app.svc.cluster.local:8888"
+          predicates:
+            - Path=/metadataapi/**
+        - id: "flow"
+          uri: "http://flow.app.svc.cluster.local:8888"
+          predicates:
+            - Path=/flowapi/**
+        - id: "sgportal"
+          uri: "http://sgportal.app.svc.cluster.local:8888"
+          predicates:
+            - Path=/sgportalapi/**
+        - id: "dataarchives"
+          uri: "http://dataarchives.app.svc.cluster.local:8888"
+          predicates:
+            - Path=/dataarchivesapi/**
+        - id: "erms"
+          uri: "http://erms.app.svc.cluster.local:8888"
+          predicates:
+            - Path=/ermsapi/**
+        - id: "search"
+          uri: "http://search.app.svc.cluster.local:8888"
+          predicates:
+            - Path=/searchapi/**
+        - id: "format"
+          uri: "http://format.app.svc.cluster.local:8888"
+          predicates:
+            - Path=/formatapi/**
+        - id: "platform"
+          uri: "http://platform.app.svc.cluster.local:8888"
+          predicates:
+            - Path=/platformapi/**
+        - id: "mic"
+          uri: "http://mic.app.svc.cluster.local:8888"
+          predicates:
+            - Path=/micapi/**
+        - id: "transferreceiving"
+          uri: "http://transferreceiving.app.svc.cluster.local:8888"
+          predicates:
+            - Path=/transferreceivingapi/**
+        - id: "triple"
+          uri: "http://triple.app.svc.cluster.local:8888"
+          predicates:
+            - Path=/tripleapi/**
+        - id: "messagedispatch"
+          uri: "http://messagedispatch.app.svc.cluster.local:8888"
+          predicates:
+            - Path=/messagedispatchapi/**
+        - id: "km"
+          uri: "http://km.app.svc.cluster.local:8888"
+          predicates:
+            - Path=/kmapi/**
+        - id: "dm"
+          uri: "http://km.app.svc.cluster.local:8888"
+          predicates:
+            - Path=/dmapi/**
+        - id: "validator"
+          uri: "http://validator.app.svc.cluster.local:8888"
+          predicates:
+            - Path=/validatorapi/**
 dubbo:
-  application:
-    metadata-service-protocol: tri
-  protocol:
-    # 使用triple协议
-    name: tri
-    # port -1代表缺醒配置，triple协议默认使用的50051
-    port: -1
   registry:
     address: zookeeper://zk-cs.base.svc.cluster.local:2181?client=curator
-  consumer:
-    #关闭订阅服务是否启动的检查【检查时，没有服务提供者会报错】
-    check: false
-  scan:
-    base-packages: cn.amberdata.erms.facade ### dubbo服务扫描包路径
-# 去除db健康检查，影响整个sofaBoot启动，导致服务无法发布
-management:
-  health:
-    db:
-      enabled: false
-# afc everyone 、 owner的权限配置
-ace:
-  everyone:
-    access:
-      id: bg000000000000000
-      permit: Browse
-  owner:
-    access:
-      id: bufffffffffffffff
-      permit: Delete
-      permit.extend: Change_Owner\,Change_Permit
-# afc默认权限配置
-default:
-  acl:
-    id: ba830238567694336
-documents:
-  linkpath:
-    table: da_ecmcore_documents_link
-  table: da_ecmcore_documents
-# afc的es连接
-es:
-  client:
-    keep-alive: 2000
-  jdbc:
-    driver-class-name: com.amazon.opendistroforelasticsearch.jdbc.Driver
-    url: jdbc:elasticsearch://http://elasticsearch.base.svc.cluster.local:9200
-    hikari:
-      connection-timeout: 30000
-      idle-timeout: 600000
-      max-lifetime: 900000
-      maximum-pool-size: 110
-      minimum-idle: 50
-      pool-name: JDBC Connection Pool of Open Distro for Elasticsearch
-      read-only: true
-  username: admin
-  password: Dctm@1234
-  refresh:
-    policy: IMMEDIATE
-  scheme: http
-  server:
-    port: 9200
-  enable: true
-  host: elasticsearch.base.svc.cluster.local
-id:
-  workerId: 1
-inherit:
-  acl:
-    from:
-      folder: true
-journal:
-  table: da_ecmcore_journal
-# 权限是否开启，无  权限可修改为false
-permission:
-  enable: true
-  max:
-    interrupt:
-      'on': ALL
-
-repository:
-  blobstore:
-    impl: oss
-  # 切换数据源  mysql,dm（达梦）,pg（PostgreDB）,mongodb
-  documentstore:
-    impl: mysql
-    type: rdb
-  password: Dctm@1234
-  queryindexprovider:
-    impl: elastic
-  user: admin
-settings:
-  table: da_ecmcore_settings
-
-# BPM工作流配置
-workflow:
-  #taskCompleteCallbackUrl: http://10.45.49.127/ermsapi/workflow/camunda/task/complete/callback?processType=%s
-  processTypes:
-    borrowing: borrowing_process
-    opening_appraisal: opening_appraisal_process
-    destroy_appraisal: destroy_appraisal_process
-    #push_opening_appraisal_task: push_opening_appraisal_task
-    appraisal_confirm: appraisal_confirm
-    push_opening_appraisal_task: jxttest
-    share_application: share_application
-#浙政钉配置
-nail:
-  zzNailCode: 21f002e4039926adf916cc49fc6509f1
-  tenantId: 196729
-address:
-  baidu: https://api.map.baidu.com/reverse_geocoding/v3/?ak=GgCca2FlM5PiuDgISotVRGR4LEMjtxkK&output=json&coordtype=wgs84ll&location=
-application:
-  white:
-    header:
-      host: 10.50.128.217,localhost:8001,192.168.126.128,localhost:18080,10.50.128.217:18080,218.72.253.211,10.27.165.104,220.191.236.246:1880,cdztc.longyou.gov.cn:6443,cdztc.longyou.gov.cn
-    redirect:
-      host: 10.50.128.217,localhost:8001,192.168.126.128,localhost:18080,10.50.128.217:18080,218.72.253.211,10.27.165.104,220.191.236.246:1880,cdztc.longyou.gov.cn:6443,cdztc.longyou.gov.cn
-mybatis:
-  mapper-locations: classpath*:mybatis/mapper/elasticsearch/*xml,classpath*:mybatis/mapper/mysql/*xml
-file:
-  category:
-    map: 电子文件-DZ,图片-B,录音录像-LY
-erms:
-  address: http://10.45.49.127
-  unitCode: GO_2e986b8ac4c44dcaba93b0790055b46e
-tdr:
-  address: http://10.45.49.127
-dingding:
-  # 钉钉应用agent_id
-  agent_id: 2417906877
-  # 钉钉应用app_key
-  app_key: dingu4axjpfaoeywu9bm
-  # 钉钉应用app_secret
-  app_secret: n3V0D5U0eN2XyPN7h2ftLVG6qgN0-_ssJmsZJrmnnRaRJNzVQjkPS9cUQIhW5dMi
-  # 钉钉前端访问域名 示例：http://localhost:8010/ermsapi/
-  approve_detail_url: http://qapre.amberdata.cn/importApp/#/
-  # 借阅
-  borrow:
-    # 非工作日是否可以催办
-    can_urge_in_holiday: true
-    # 每天可以催办的次数
-    urge_num_everyday : 10
-permissionJson: '[{\"name\":\"无\",\"value\":\"10\"},{\"name\":\"浏览条目\",\"value\":\"20\"},{\"name\":\"读取内容\",\"value\":\"30\"},{\"name\":\"下载\",\"value\":\"32\"},{\"name\":\"关联\",\"value\":\"36\"},{\"name\":\"版本\",\"value\":\"40\"},{\"name\":\"写入\",\"value\":\"50\"}]'
-# 开放鉴定审批结束是否自动下载文件 值范围（true、false）
-download_flag: true
-default_display_advanced_search: false
-# 归档前是否进行四性检测校验 true 开启， false 关闭
-archive_validate: false
-#定时清理临时目录任务  cycle_times：循环次数（每次查询1k个文件,值至少为1） time_difference：时间差（清除几天之前的数据，值最少为0）
-clear_file_schedule:
-  cycle_times: 10
-  time_difference: 1
+cn:
+  amberdata:
+    sso:
+      login-domain: https://da.nbjb.gov.cn
+buservice:
+  zookeeper:
+    host: zk-cs.base.svc.cluster.local:2181

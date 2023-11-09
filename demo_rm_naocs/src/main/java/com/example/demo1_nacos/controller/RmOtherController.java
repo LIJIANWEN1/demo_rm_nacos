@@ -1,12 +1,13 @@
 package com.example.demo1_nacos.controller;
 import cn.amberdata.rm.classification.mapper.SubCategoryMapper;
 import cn.amberdata.rm.metadata.itemcode.MetadataCodeItem;
+import cn.amberdata.tdr.classification.command.CategoryCreateCommand;
 import com.example.demo1_nacos.service.RmArchiveServiceImpl;
 import com.example.demo1_nacos.service.RmOtherServiceImpl;
-import com.example.demo1_nacos.service.command.CategoryCreateCommand;
 import com.example.demo1_nacos.service.command.SubCategoryCreateCommand;
 import com.example.demo1_nacos.vo.ImportArchivePackageVO;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -62,22 +63,12 @@ public class RmOtherController {
     /**
      * 创建门类
      *
+     * @param command 创建门类命令参数
      */
     @ApiOperation(value = "创建门类")
     @PostMapping("/create_category")
-    public void createCategory(@Validated @RequestBody CategoryCreateCommand categoryCreateCommand) {
-        rmOtherService.create(categoryCreateCommand);
-    }
-
-    /**
-     * 创建类目
-     *
-     * @param subCategoryCreateCommand 类目参数对象
-     */
-    @ApiOperation(value = "创建类目")
-    @PostMapping("/create_class")
-    public String create(@Validated @RequestBody SubCategoryCreateCommand subCategoryCreateCommand) {
-        return rmOtherService.create(subCategoryCreateCommand);
+    public void create(@RequestParam String archiveFilePath,@RequestBody @ApiParam() CategoryCreateCommand command) {
+        rmOtherService.create(command,archiveFilePath);
     }
 
     @ApiOperation(value = "创建保留处置策略")
