@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Main-Class: com.example.jk.JkApplication
+Class-Path: jakarta.el-3.0.3.jar slf4j-api-1.7.30.jar jai_core-1.1.3.jar
+  spring-boot-starter-2.4.2.jar spring-beans-5.3.3.jar jackson-datatype-
+ jsr310-2.11.4.jar esdk-obs-java-3.1.2.1.jar logback-core-1.2.3.jar tomc
+ at-embed-websocket-9.0.41.jar snakeyaml-1.27.jar jackson-databind-2.11.
+ 4.jar jakarta.annotation-api-1.3.5.jar jackson-datatype-jdk8-2.11.4.jar
+  spring-boot-2.4.2.jar spring-webmvc-5.3.3.jar spring-boot-starter-tomc
+ at-2.4.2.jar spring-core-5.3.3.jar log4j-to-slf4j-2.13.3.jar spring-exp
+ ression-5.3.3.jar spring-boot-starter-logging-2.4.2.jar jul-to-slf4j-1.
+ 7.30.jar spring-jcl-5.3.3.jar spring-boot-starter-json-2.4.2.jar tomcat
+ -embed-core-9.0.41.jar jackson-core-2.11.4.jar esdk-obs-java-3.1.2.1.ja
+ r logback-classic-1.2.3.jar jackson-annotations-2.11.4.jar spring-web-5
+ .3.3.jar log4j-api-2.13.3.jar spring-context-5.3.3.jar jackson-module-p
+ arameter-names-2.11.4.jar spring-aop-5.3.3.jar spring-boot-autoconfigur
+ e-2.4.2.jar spring-boot-starter-web-2.4.2.jar
+

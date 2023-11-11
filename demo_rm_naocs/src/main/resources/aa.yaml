@@ -1,186 +1,257 @@
+server:
+  port: 8012
+  servlet:
+    context-path: /tdrapi
 spring:
-  datasource:
-    db: mysql
-    type: com.alibaba.druid.pool.DruidDataSource
-    druid:
-      driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://mysql.base.svc.cluster.local:3306/admin-backend?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-      username: root
-      password: Dctm@1234
-      initial-size: 30
-      max-active: 100
-      min-idle: 30
-      max-wait: 60000
-      pool-prepared-statements: true
-      max-pool-prepared-statement-per-connection-size: 20
-      time-between-eviction-runs-millis: 60000
-      min-evictable-idle-time-millis: 300000
-      test-while-idle: true
-      test-on-borrow: false
-      test-on-return: false
-      stat-view-servlet:
-        enabled: true
-        url-pattern: /druid/*
-      filter:
-        stat:
-          log-slow-sql: true
-          slow-sql-millis: 1000
-          merge-sql: false
-        wall:
-          config:
-            multi-statement-allow: true
+  profiles:
+    active: 6.0
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+    fallbackToSystemLocale: true
+  thymeleaf:
+    prefix: classpath:/static/
+    suffix: .html
+    cache: false
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
   redis:
     database: 0
-    host: redis.base.svc.cluster.local
-    port: 6379
+    # 根据Redis部署地址更改IP
+    host: redis.qa-wy.svc.cluster.local
+    jedis:
+      pool:
+        max-active: 20
+        max-idle: 10
+        max-wait: -1
+        min-idle: 5
     password: Dctm@1234
+    port: 6379
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 100MB
+      location: /amberdata/tdr/data
+      max-file-size: 5120MB
+      max-request-size: 5120MB
   elasticsearch:
     rest:
-      uris: http://elasticsearch.base.svc.cluster.local:9200
-      username: admin
+      # 根据ES部署地址更改IP
+      uris: [ "opensearch.qa-wy.svc.cluster.local:9200" ]
+      username: es_admin
       password: Dctm@1234
-dubbo:
-  application:
-    metadata-service-protocol: tri
-    register-mode: instance
-  protocol:
-    name: tri
-    port: 58001
-  registry:
-    address: zookeeper://zk-cs.base.svc.cluster.local:2181?client=curator #修改点1
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    hikari:
+      auto-commit: true
+      connection-timeout: 30000
+      idle-timeout: 180000
+      max-lifetime: 1800000
+      maximum-pool-size: 50
+      minimum-idle: 10
+    password: myAuF5CnDo
+    # 根据Mysql部署地址更改IP
+    url: jdbc:mysql://mysql.qa-base.svc.cluster.local:3306/tdr_lx?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai
+    username: qa-wy
+logging:
+  path: ./logs
+  level:
+    root: INFO
+    org.hibernate: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.type.descriptor.sql.BasicExtractor: TRACE
 cn:
   amberdata:
-    sms:
-      message-project: xx
-      end-point: xxx
-      access-key: xxx
-      secret-key: xx
-      srcnum: 3336
+    # 档号特殊字符正则校验配置，目前[a-z0-9A-Z\\-·]+是大小写字母、数字、【-】、【·】
+    archive-id-verify: ""
+    archive-title: 此件涉密，不扫描，不挂接
+    archive-author: 空
+    archive-articleNumber: 空
+    # 档案同步查档直通车topic，也可不进行配置，默认使用RECORD_SYNC_TO_PLATFORM
+    record-sync-topic: RECORD_SYNC_TO_PLATFORM
+    # 【涉密质检】涉密等级配置（密级标准代码项值，逗号分开），配置后的等级判定为涉密
+    secret-level: L2,L3
+    sso:
+      # 登录中心地址，根据admin部署地址更改IP
+      login-domain: http://qalx.amberdata.cn
+    # CDN地址
+    cdn:
+      host: http://frontend.amberdata.cn:30080
+    index:
+      hash: 2b812c4bf84221542104,b5b841160a363f30872d,b5b841160a363f30872d,0f253e04d77fbc780dae,3b894a3acaaad77770ca,ddb12a90e770555a24e8,dedf8c7f4c162677bbbb,dedf8c7f4c162677bbbb,[gitBranch=master]-[gitUser=chenlongwei]-[打包时间=2023-06-16 11:34]-[COMMIT_SHA=92236510f447336f691bf35ac8b877b01a6a7250]
+    rocketmq:
+      consumer:
+        # 组名，无需更改
+        group-name: GP_TDR
+        # 配置mq消费者 IP（mq统一部署IP）
+        namesrv-addr: namesrv.qa-wy.svc.cluster.local:9876
+        # 主题名，无需更改
+        topic: TP_ADMIN_ORGANIZATION
+      producer:
+        group-name: tdr-group
+        # 配置mq生产者 IP（mq统一部署IP）
+        namesrv-addr: namesrv.qa-wy.svc.cluster.local:9876
+        max-message-size: 12582912
+    config:
+      cache:
+        init-caches:
+          ermsapi-default:
+            name: default
+            ttl: -1
+          ermsapi-other:
+            name: other
+            ttl: -1
     boot:
       blobstore:
         spring:
           boot:
+            # 根据现场云存储类型进行更改：MinIOBlobStore（需部署MinIo）,
+            # OSSBlobStore（阿里云）,OBSBlobStore(华为云)
             blob-store-impl-name: MinIOBlobStore
             primaryBId: 1
             routeStrategy: random
-            store-nodes: #修改点2
+            store-nodes:
               - bId: 1
-                access-key: admin
-                bucket-name: admin
-                end-point: http://minio.base.svc.cluster.local:9000
-                secret-key: Dctm@1234
-    rocketmq:
-      producer:
-        group-name: admin-group
-        namesrv-addr: rocketmq.base.svc.cluster.local:9876
-        max-message-size: 102400
-        send-msg-timeout: 3000
-        retry-times-when-send-failed: 2
-    mq:
-      enable: true
-    sso:
-      login-domain: http://10.68.190.225:84
-      backend-uri-check: true
-      white-header-enable: false
-      white-header-host:
-      white-redirect-enable: false
-      white-redirect-host:
-      default-redirect-url:
-      security-xss-enable: true
-    cdn:
-      host: http://10.68.190.225:84/cdn/
-    index:
-      hash: c2f404cb,a0d9b057,577b0674,fce94c80,aeb3e857,aefe249c,[gitBranch=develop]-[gitUser=cuimt]-[打包时间=2023-09-05 11:26]-[COMMIT_SHA=406191c6503424f4c3b208d8dd4de2ffebecc8fd]
-    login:
-      hash: 130fd318f67451f7c7476,80ab492fe3d778817936,f0dde84cf7a460c8b133,7ff3fc35f9bdbaf81d86,dc2e03ff92d3dd705931,165b5d8713a4efddd64b,[gitBranch=new_sso]-[gitUser=chenlongwei]-[打包时间=2023-08-12 10:45]-[COMMIT_SHA=f6634aa408b0b42e9ff9e71989e605c9c7887256]
-spi:
-  org_user:
-    enable: false
-  jar:
-    dir:
-      org_user: /usr/spi
-name:
-  admin: 江北区档案
-
-auth:
-  enable:
-  config :
-    zzd_scan:
-      app:
-        code: so
-        sign: hzdazhfw_dingoa
-        redirect_url: http://172.18.48.191
-sync:
-  zzd:
-    app:
-      key: xsszdazhfw-60Azs2KbKJnPvb6V7Zj
-      secret: sg2719ZRarv82E2M3w9577txI0not2tDOmXW1lF0
-      protocol: https
-      domain: openplatform-pro.ding.zj.gov.cn
-      adminTenantId: 196729
-      callBack:
-        enable: false
-        host: http://202.101.162.69:22080/adminapi/sync
-ext:
-  plugin:
-    enable: zzd_scan
-    sso:
-      config:
-        hlt:
-          auth_fail:
-            pc: xxx
-            app: xxx
-          api_host: hxx
-          app_key: xx
-          app_secret: xxp
-          app_code: Axx
-        zlb2:
-          service:
-            code: xx
-            pwd: xxx
-            immediateSysUser: true
-        zlb_wechat:
-          url:
-            token: xx
-            user: x
-          appid: x
-          ak: x
-          sk: x
-          immediateSysUser: true
-        zzd:
-          service:
-            code: code
-            pwd: pwd
-        csdn:
-          appid: appid
-          secret: secret
-        zzd_scan:
-          key: xsszdazhfw_dingoa-20tBLuaQ73Er
-          secret: 6s1Z0Nq5eI68N20ZghNWlf271L4gZ90fIjHyjz3L
-          client: xsszdazhfw
-          redirect: http://10.71.147.185/adminapi/sso/authSuccess/zzd_scan/so
-          immediateSysUser: true
-        zzd_free:
-          key: xsszdazhfw-60Azs2KbKJnPvb6V7Zj
-          secret: sg2719ZRarv82E2M3w9577txI0not2tDOmXW1lF0
-application:
-  data_filter: true
-  permission:
-    enable: false
-    tactics: FULL  #FULL OR VAGUE
-  spi:
-    enable: false
-    jar_dir: /usr/spi  #容器中jar包放置路径，需要映射到宿主以方便更换
-logging:
-  level:
-    cn:
-      amberdata:
-        admin:
-          root: info
-          authentication: info
+                endPoint: http://minio.qa-wy.svc.cluster.local:9000
+                accessKey: admin
+                secretKey: Dctm@1234
+                bucketName: tdr
+                desc: tdr
+    borrow:
+      roleName: 档案管理员
+    # 根据OCR��务部�������址更改IP
+    ocr:
+      url: http://192.168.10.14:8868/predict/ocr_system
+    ocrUrl: http://192.168.10.14:8868/predict/ocr_system
+    asr:
+      url: ws://192.168.10.52:9090/paddlespeech/asr/streaming
+    # 是否开启文档打标功能
+    label-open: true
+    # 根据文件获取标签列表的接口地址
+    label-list-url: "http://192.168.10.205:17998/XS_pos"
 com:
   alipay:
     sofa:
       sofamq:
         config:
-          topic: TP_ADMIN_NEW
+          # 请勿更改��固��主题
+          topic: TP_ADMIN_ORGANIZATION
+      boot:
+        bean-load-cost: 100
+        allow-bean-definition-overriding: false
+        module-start-up-parallel: true
+        publish-event-to-parent: false
+      rpc:
+        consumer-repeated-reference-limit: 10
+        registry:
+          # 需要配置nacos.amberdata.cn的hosts，对应nacos部署地址
+          address: nacos://nacos.amberdata.cn:8848/qalx?username=nacos&password=Dctm@1234
+        # 本地启动需要此配置，不然会产生bolt端口冲突
+        virtual:
+          host: tdrapi.qa-wy.svc.cluster.local
+        bolt:
+          port: 22209
+        rest:
+          port: 18409
+
+# 去除db健康检查，影响整个sofaBoot启动，导致服务无法发布
+management:
+  health:
+    db:
+      enabled: false
+# afc everyone 、 owner的权限配置
+ace:
+  everyone:
+    access:
+      id: bg000000000000000
+      permit: Browse
+  owner:
+    access:
+      id: bufffffffffffffff
+      permit: Delete
+      permit.extend: Change_Owner\,Change_Permit
+# afc默认权限配置
+default:
+  acl:
+    id: ba830238567694336
+documents:
+  linkpath:
+    table: da_tdr_documents_link
+  table: da_tdr_documents
+# afc的es连接
+es:
+  client:
+    keep-alive: 2000
+  jdbc:
+    driver-class-name: com.amazon.opendistroforelasticsearch.jdbc.Driver
+    url: jdbc:elasticsearch://http://opensearch.qa-wy.svc.cluster.local:9200
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      pool-name: JDBC Connection Pool of Open Distro for Elasticsearch
+      read-only: true
+  username: admin
+  password: admin
+  refresh:
+    policy: IMMEDIATE
+  scheme: http
+  server:
+    port: 9200
+  enable: true
+  host: opensearch.qa-wy.svc.cluster.local
+id:
+  workerId: 1
+inherit:
+  acl:
+    from:
+      folder: true
+journal:
+  table: da_tdr_journals
+# 权限是否开启，无��权限可修改为false
+permission:
+  enable: true
+  max:
+    interrupt:
+      'on': ALL
+
+repository:
+  blobstore:
+    impl: minio
+  # 切换数据源  mysql,dm（达梦）,pg（PostgreDB）,mongodb
+  documentstore:
+    impl: mysql
+    type: rdb
+  password: Dctm@1234
+  queryindexprovider:
+    impl: elastic
+  user: admin
+settings:
+  table: da_tdr_settings
+
+# BPM工作流配置
+workflow:
+  processTypes:
+    borrowing: borrowing_process
+    opening_appraisal: opening_appraisal_process
+    destroy_appraisal: destroy_appraisal_process
+    appraisal_confirm: appraisal_confirm
+    push_opening_appraisal_task: jxttest
+
+address:
+  baidu: https://api.map.baidu.com/reverse_geocoding/v3/?ak=GgCca2FlM5PiuDgISotVRGR4LEMjtxkK&output=json&coordtype=wgs84ll&location=
+application:
+  white:
+    header:
+      enable: false
+      host: qalx.amberdata.cn,192.168.10.78,192.168.10.170,localhost:8012,hzent.amberdata.cn:10086,https://39j7z66952.oicp.vip
+mybatis:
+  mapper-locations: classpath*:mybatis/mapper/elasticsearch/*xml,classpath*:mybatis/mapper/mysql/*xml
+file:
+  category:
+    map: 电子文件-DZ,图片-B,录音录像-LY
+erms:
+  address: http://qalx.amberdata.cn
+  unitCode: ZNJDDW

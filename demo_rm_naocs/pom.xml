@@ -275,6 +275,11 @@
                <version>3.3.7</version>
            </dependency>
 
+        <dependency>
+            <groupId>com.huawei.storage</groupId>
+            <artifactId>esdk-obs-java</artifactId>
+            <version>3.1.2.1</version>
+        </dependency>
 <!--        <dependency>-->
 <!--            <groupId>javax.media</groupId>-->
 <!--            <artifactId>jai_codec</artifactId>-->
@@ -379,6 +384,11 @@
                         </include>
                     </includes>
                 </configuration>
+                <executions>
+                    <execution>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -387,7 +397,7 @@
                     <source>8</source>
                     <target>8</target>
                 </configuration>
-            </plugin><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><configuration><source>8</source><target>8</target></configuration></plugin>
+            </plugin>
         </plugins>
     </build>
 

@@ -1,36 +1,26 @@
-package com.example.demo1_nacos.controller;
-import cn.amberdata.rm.metadata.itemcode.MetadataCodeItem;
-import com.example.demo1_nacos.service.ObsBucketServiceImpl;
-import com.example.demo1_nacos.service.RmOtherServiceImpl;
+package com.example.jk.demo;
+
 import com.obs.services.ObsClient;
 import com.obs.services.exception.ObsException;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
+import java.io.InputStreamReader;
+import java.util.*;
 
-/**
- * @author zhangLei
- * @version 1.0
- * @date 2022/9/17 9:20
- */
 @RestController
-@RequestMapping("/obs_operation")
-public class ObsBucketController {
-
+public class OBSUtils {
     @Resource
     private ObsBucketServiceImpl obsBucketService;
 
     /**
      * 操作桶
      */
-    @ApiOperation(value = "操作桶")
-    @PostMapping("/operation_bucket")
-    public void create(@RequestParam String operation,Integer n) {
-        String bucketName ="";
+    @GetMapping("/operation_bucket")
+    public void create(@RequestParam String operation,@RequestParam String bucketName,Integer n) {
         ObsClient obsClient = null;
         try{
             obsClient  = obsBucketService.newObsClient();
@@ -39,24 +29,33 @@ public class ObsBucketController {
                 case "create":
                     //创建桶
                     obsBucketService.createObsBucket(bucketName);
+                    break;
                 case "get_location":
                     //获取桶位置信息
                     obsBucketService.getObsBucketLocation(bucketName);
+                    break;
                 case "get_storage_info":
                     //获取桶存储信息
                     obsBucketService.getObsBucketStorageInfo(bucketName);
+                    break;
                 case "set_storage":
                     //设置存储大小
                     obsBucketService.doBucketQuotaOperation(bucketName,n);
+                    break;
                 case "set_acl":
                     //设置权限公共读写
                     obsBucketService.doObsBucketAclOperation(bucketName);
+                    break;
                 case "set_cors":
                     //设置桶的访问权限
                     obsBucketService.doObsBucketCorsOperation(bucketName);
+                    break;
                 case "delete":
                     //删除桶
                     obsBucketService.deleteObsBucket(bucketName);
+                    break;
+                default:
+                    break;
             }
         } catch (ObsException e)
         {
@@ -84,5 +83,4 @@ public class ObsBucketController {
         }
 
     }
-
 }
