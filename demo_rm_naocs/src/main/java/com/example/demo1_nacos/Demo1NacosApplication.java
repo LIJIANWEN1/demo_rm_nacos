@@ -28,8 +28,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         MongoDataAutoConfiguration.class,
         DataSourceAutoConfiguration.class
 })
-@ComponentScan(excludeFilters  = {@ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE, classes = {RocketMqConsumerConfiguration.class})}, basePackages = {        "cn.amberdata.afc","cn.amberdata.dm","cn.amberdata.rm","cn.amberdata.cache","cn.amberdata.common",
+@ComponentScan(basePackages = {      "cn.amberdata.afc", "cn.amberdata.dm", "cn.amberdata.rm", "cn.amberdata.tdr", "cn.amberdata.common.mq", "cn.amberdata.validator",
         "com.example.demo1_nacos.mapper.tdr",
         "com.example.demo1_nacos.controller",
         "com.example.demo1_nacos.service",

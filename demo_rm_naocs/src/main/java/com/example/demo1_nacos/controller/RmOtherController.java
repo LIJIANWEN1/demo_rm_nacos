@@ -1,9 +1,9 @@
 package com.example.demo1_nacos.controller;
 import cn.amberdata.rm.classification.mapper.SubCategoryMapper;
 import cn.amberdata.rm.metadata.itemcode.MetadataCodeItem;
-import cn.amberdata.tdr.classification.command.CategoryCreateCommand;
 import com.example.demo1_nacos.service.RmArchiveServiceImpl;
 import com.example.demo1_nacos.service.RmOtherServiceImpl;
+import com.example.demo1_nacos.service.command.CategoryCreateCommand;
 import com.example.demo1_nacos.service.command.SubCategoryCreateCommand;
 import com.example.demo1_nacos.vo.ImportArchivePackageVO;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +26,17 @@ public class RmOtherController {
 
     @Resource
     private RmOtherServiceImpl rmOtherService;
+
+    /**
+     * 创建整理计划
+     *
+     * @param command 创建门类命令参数
+     */
+    @ApiOperation(value = "创建整理计划")
+    @PostMapping("/create_file_plan")
+    public void create(@RequestBody @ApiParam() CategoryCreateCommand command) {
+        rmOtherService.create(command);
+    }
 
 
 
@@ -58,17 +69,6 @@ public class RmOtherController {
     @GetMapping("/get_subcategory_by_name_and_parent_id")
     public String getSubCategoryByNameAndParentId(@RequestParam String name,@RequestParam String parentId)  {
         return rmOtherService.getSubCategoryIdByNameAndParentId(name,parentId);
-    }
-
-    /**
-     * 创建门类
-     *
-     * @param command 创建门类命令参数
-     */
-    @ApiOperation(value = "创建门类")
-    @PostMapping("/create_category")
-    public void create(@RequestParam String archiveFilePath,@RequestBody @ApiParam() CategoryCreateCommand command) {
-        rmOtherService.create(command,archiveFilePath);
     }
 
     @ApiOperation(value = "创建保留处置策略")

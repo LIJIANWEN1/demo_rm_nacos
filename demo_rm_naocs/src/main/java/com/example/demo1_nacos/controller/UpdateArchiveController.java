@@ -51,4 +51,14 @@ public class UpdateArchiveController {
     public void updateTimeStrYL(@RequestParam String path){
         updateArchivalIdByYuLin.updateTimeStrYL(path);
     }
+
+    @GetMapping("/update_time_jb")
+    public void updateTimeStrJb(@RequestParam String path){
+        updateArchivalIdByYuLin.updateTimeStrYL(path);
+    }
+
+    @GetMapping("/add_jb_XCSJ_str")
+    public void addJbXCSJ(@RequestParam String objectType,@RequestParam String path,@RequestParam Integer size){
+        updateArchivalIdByYuLin.addJbXCSJ(objectType,path,size);
+    }
 }

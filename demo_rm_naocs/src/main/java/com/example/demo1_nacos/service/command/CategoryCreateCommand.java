@@ -3,6 +3,8 @@ package com.example.demo1_nacos.service.command;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * Description: 门类创建命令
  *
@@ -24,15 +26,10 @@ public class CategoryCreateCommand {
     @ApiModelProperty(value = "绑定的库房编号", name = "warehouseNo")
     private String warehouseNo;
 
-    @ApiModelProperty(value = "", name = "archivePath",required = true)
-    private String archivePath;
+    @ApiModelProperty(value = "保留处置策略Id", name = "retentionPolicyId")
+    private String retentionPolicyId;
 
-    @ApiModelProperty(value = "", name = "archivePath",required = true)
-    private String unitId;
+    @ApiModelProperty(value = "整编库门类id", name = "ids")
+    private List<String> ids;
 
-    @ApiModelProperty(value = "", name = "archivePath",required = true)
-    private String retentionPolicyPath;
-
-    @ApiModelProperty(value = "", name = "archivePath",required = true)
-    private String code;
 }

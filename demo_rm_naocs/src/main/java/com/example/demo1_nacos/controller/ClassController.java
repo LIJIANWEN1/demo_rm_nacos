@@ -1,18 +1,10 @@
 package com.example.demo1_nacos.controller;
 
 
-import cn.amberdata.dm.common.utils.ListResult;
-import cn.amberdata.rm.admin.eventlog.EventLogConstants;
-import cn.amberdata.rm.admin.eventlog.annotation.EventLogAnnotation;
-import com.example.demo1_nacos.service.SubCategoryServiceImpl;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.validation.constraints.NotBlank;
 
 /**
  * 类目操作控制器类
@@ -24,9 +16,6 @@ import javax.validation.constraints.NotBlank;
 @RestController
 @RequestMapping("/class")
 public class ClassController {
-
-    @Resource
-    private SubCategoryServiceImpl subCategoryService;
 
 //    /**
 //     * 创建类目

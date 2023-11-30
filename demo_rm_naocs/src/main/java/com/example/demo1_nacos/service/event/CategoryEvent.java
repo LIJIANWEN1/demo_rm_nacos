@@ -4,6 +4,7 @@ import cn.amberdata.dm.common.domain.event.DomainEvent;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Description: 门类创建事件
@@ -15,16 +16,9 @@ import java.util.Date;
 public class CategoryEvent implements DomainEvent {
 
     /**
-     * 门类id
+     * 整个门类树id集合
      */
-    private String categoryId;
-
-    /**
-     * unitid
-     */
-    private String unitId;
-
-    private String retentionPolicyPath;
+    List<String> singleCategoryTreeIdList;
 
     @Override
     public Date occurredTime() {

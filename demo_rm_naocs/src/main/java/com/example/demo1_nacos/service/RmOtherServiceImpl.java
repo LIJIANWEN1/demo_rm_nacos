@@ -1,22 +1,16 @@
 package com.example.demo1_nacos.service;
-import cn.amberdata.afc.api.object.IAfPersistentObject;
 import cn.amberdata.afc.api.object.IAfSysObject;
-import cn.amberdata.afc.common.util.AfSessionUtils;
 import cn.amberdata.common.response.exception.BusinessException;
 import cn.amberdata.dm.common.context.session.SessionContext;
-import cn.amberdata.dm.common.context.unit.UnitContext;
 import cn.amberdata.dm.common.domain.event.DomainEventPublisher;
 import cn.amberdata.dm.folder.Folder;
 import cn.amberdata.dm.folder.FolderRepository;
-import cn.amberdata.dm.organization.department.DepartmentCommand;
 import cn.amberdata.dm.organization.department.DepartmentService;
 import cn.amberdata.dm.session.SessionUtil;
 import cn.amberdata.dm.sysobject.SysObjectDO;
 import cn.amberdata.dm.sysobject.SysObjectRepository;
 import cn.amberdata.dm.sysobject.SysObjectService;
 import cn.amberdata.dm.sysobject.mapper.SysObjectMapper;
-import cn.amberdata.metadata.facade.dto.MetadataSchemeInfoDTO;
-import cn.amberdata.rm.archive.AbstractArchive;
 import cn.amberdata.rm.archive.AbstractArchiveRepository;
 import cn.amberdata.rm.archive.record.mapper.RecordMapper;
 import cn.amberdata.rm.archive.volume.mapper.VolumeMapper;
@@ -36,16 +30,12 @@ import cn.amberdata.rm.settings.strategy.mapper.RetentionStrategyMapper;
 import cn.amberdata.rm.settings.strategy.valueobject.DisposalType;
 import cn.amberdata.rm.settings.strategy.valueobject.RetentionStrategyStyle;
 import cn.amberdata.rm.unit.context.UnitFolderContext;
-import cn.amberdata.tdr.classification.CategoryEvent;
-import cn.amberdata.tdr.classification.command.CategoryCreateCommand;
-import cn.amberdata.tdr.classification.specification.CategoryCreateSpecification;
-import com.aspose.slides.Collections.Specialized.CollectionsUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.demo1_nacos.service.command.CategoryCreateCommand;
 import com.example.demo1_nacos.service.command.SubCategoryCreateCommand;
-import com.example.demo1_nacos.service.specification.ClassNumberSpecification;
-import com.example.demo1_nacos.service.specification.ClassWhetherOperatedSpecification;
-import com.example.demo1_nacos.service.specification.SubCategoryCreateSpecification;
+import com.example.demo1_nacos.service.event.CategoryEvent;
+import com.example.demo1_nacos.service.specification.CategoryCreateSpecification;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
@@ -154,6 +144,82 @@ public class RmOtherServiceImpl {
 //        }
     }
 
+    public void create(CategoryCreateCommand command) {
+        //获取本单位档案库文件夹路径
+//        String archiveFilePath = UnitFolderContext.getObject().getArchiveFilePath();
+//        Folder archiveFolder = folderRepository.findByPath(archiveFilePath);
+//        //获取元数据门类
+//        String[] idFroms = command.getIdFromMetadata().split(",");
+//        //根据元数据平台的门类，保存相应的结构，用list集合把数据放进来
+//        StringBuilder categoryName = new StringBuilder();
+//        for (int j = 0; j < idFroms.length; j++) {
+//            List<MetadataCategory> metadataCategoryList = metadataCategoryRepository.getIterationMetadataCategoryListById(idFroms[j]);
+//            //定义单条门类树id集合，用于生成对应文件计划
+//            List<String> singleCategoryTreeIdList = new ArrayList<>();
+//            //拼接父门类编码
+//            StringBuilder code = new StringBuilder();
+//            for (int i = metadataCategoryList.size() - 1; i >= 0; i--) {
+//                if (i > 0) {
+//                    code.append(metadataCategoryList.get(i).getCode()).append("·");
+//                } else {
+//                    code.append(metadataCategoryList.get(i).getCode());
+//                }
+//            }
+//            String codePrefix = "";
+//            if (code.toString().contains("·")) {
+//                //父门类编码
+//                codePrefix = code.substring(0, code.lastIndexOf("·"));
+//            }
+//            //循环里会赋值当前门类的父id,第一次为档案库的id
+//            String parentId = archiveFolder.getObjectId().getId();
+//            for (int i = metadataCategoryList.size() - 1; i >= 0; i--) {
+//                MetadataCategory metadataCategory = metadataCategoryList.get(i);
+//                //如果当前路径下已经存在相同门类，则无需创建，父id赋值为已存在门类id并跳过本次循环
+//                Category codeExistCategory = categoryRepository.findCategoryByCodeAndParentId(metadataCategory.getCode(), parentId);
+//                if (null != codeExistCategory && i != 0) {
+//                    parentId = codeExistCategory.getObjectId().getId();
+//                    singleCategoryTreeIdList.add(parentId);
+//                    continue;
+//                } else if (null != codeExistCategory) {
+//                    parentId = codeExistCategory.getObjectId().getId();
+//                    //拼接所有已存在的门类名称用于给出提示
+//                    categoryName.append(codeExistCategory.getName()).append(",");
+//                    //循环门类id数组最后一个值时给出提示
+//                    if (idFroms.length - 1 == j) {
+//                        String categoryNames = categoryName.substring(0, categoryName.lastIndexOf(","));
+//                        throw new BusinessException(ExceptionCode.CATEGORY_ALREADY_EXIST.getCode(), String.format("[%s]已存在，不可重复添加", categoryNames));
+//                    }
+//                    continue;
+//                }
+//                Category category;
+//                //如果该门类为顶级节点 那么前缀设置为null
+//                if (metadataCategory.getTop()) {
+//                    category = categoryRepository.newEntity(metadataCategory.getCode(), metadataCategory.getName(),
+//                            metadataCategory.getCode() + "." + metadataCategory.getName(), command.getIdFromMetadata(),
+//                            command.getSort(), command.getWarehouseNo(), command.getCollectionWay(), null, command.getRetentionPolicyId());
+//                } else {
+//                    category = categoryRepository.newEntity(metadataCategory.getCode(), metadataCategory.getName(),
+//                            metadataCategory.getCode() + "." + metadataCategory.getName(), command.getIdFromMetadata(),
+//                            command.getSort(), command.getWarehouseNo(), command.getCollectionWay(), codePrefix, command.getRetentionPolicyId());
+//                }
+//                //元数据门类赋值并设置门类父路径
+//                category.assignValueByMetadataCategory(metadataCategory, parentId, null);
+//                CategoryCreateSpecification specification = new CategoryCreateSpecification(metadataCategoryRepository);
+//                specification.isSatisfiedBy(category);
+//                //最底层门类绑定库房编号
+//                category.bindWarehouse(command.getWarehouseNo());
+//                categoryRepository.store(category);
+//                singleCategoryTreeIdList.add(category.getObjectId().getId());
+//                parentId = category.getObjectId().getId();
+//            }
+            //监听门类创建，叶子节点下创建初始类目
+            CategoryEvent categoryEvent = new CategoryEvent();
+            categoryEvent.setSingleCategoryTreeIdList(command.getIds());
+            DomainEventPublisher.publish(categoryEvent);
+            //标记引用元数据门类
+//            metadataCategoryRepository.referenceCategoryByIds(Collections.singletonList(idFroms[j]));
+//        }
+    }
     public void create(CategoryCreateCommand command,String archiveFilePath) {
         SessionContext.setSession(SessionUtil.getAdminSession());
         //获取本单位档案库文件夹路径
@@ -214,7 +280,7 @@ public class RmOtherServiceImpl {
                 }
                 //元数据门类赋值并设置门类父路径
                 category.assignValueByMetadataCategory(metadataCategory, parentId, null);
-                cn.amberdata.tdr.classification.specification.CategoryCreateSpecification specification = new CategoryCreateSpecification(metadataCategoryRepository);
+                CategoryCreateSpecification specification = new CategoryCreateSpecification(metadataCategoryRepository);
                 specification.isSatisfiedBy(category);
                 //最底层门类绑定库房编号
                 category.bindWarehouse(command.getWarehouseNo());
@@ -223,7 +289,7 @@ public class RmOtherServiceImpl {
                 parentId = category.getObjectId().getId();
             }
             //监听门类创建，叶子节点下创建初始类目
-            cn.amberdata.tdr.classification.CategoryEvent categoryEvent = new CategoryEvent();
+            CategoryEvent categoryEvent = new CategoryEvent();
             categoryEvent.setSingleCategoryTreeIdList(singleCategoryTreeIdList);
             DomainEventPublisher.publish(categoryEvent);
             //标记引用元数据门类
