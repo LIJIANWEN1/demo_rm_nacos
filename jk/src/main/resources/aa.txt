@@ -1,0 +1,1 @@
+curl "http://100.90.27.5:8777/jkapi/operation_bucket?operation=get_location&bucketName=jbdag&n=1"
