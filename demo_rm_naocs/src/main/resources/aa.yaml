@@ -1,305 +1,71 @@
-server:
-  port: 8888
-  servlet:
-    context-path: /sgportalapi
-  tomcat:
-    max-http-form-post-size: 100MB
-spring:
-  servlet:
-    multipart:
-      max-file-size: 5120MB
-      max-request-size: 51200MB
-  thymeleaf:
-    prefix: classpath:/static/
-    suffix: .html
-    cache: false
-  messages:
-    basename: i18n/messages
-    encoding: UTF-8
-    fallbackToSystemLocale: true
-  datasource:
-    url: jdbc:mysql://10.68.190.225:3306/sgportal?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-    username: root
-    password: Dctm@1234
-    driver-class-name: com.mysql.jdbc.Driver
-  jackson:
-    date-format: yyyy-MM-dd
-    time-zone: GMT+8
-  redis:
-    database: 0
-    host: 10.68.190.225
-    jedis:
-      pool:
-        max-active: 20
-        max-idle: 10
-        max-wait: -1
-        min-idle: 5
-    password: Dctm@1234
-    port: 6379
-logging:
-  path: ./logs
-  level:
-    cn.amberdata.sgportal.persistence.dao: debug
-dubbo:
-  application:
-    metadata-service-protocol: tri
-  protocol:
-    name: tri
-    port: -1
-  registry:
-    address: zookeeper://10.68.190.225:28091?client=curator
-  consumer:
-    check: false
-  scan:
-    base-packages: cn.amberdata.sgportal.service.facade
-com:
-  alipay:
-    sofa:
-      boot:
-        bean-load-cost: 100
-        allow-bean-definition-overriding: false
-        module-start-up-parallel: true
-        publish-event-to-parent: false
-      rpc:
-        registry:
-          address: nacos://10.68.190.225:8848/amberdata?username=nacos&password=Dctm@1234
-        bolt:
-          port: 22211
-        rest:
-          port: 18430
-        virtual:
-          host: 10.68.190.225
-      sofamq:
-        config:
-          topic: TP_ADMIN_NEW
-cn:
-  amberdata:
-    openapi:
-      header:
-        appKey: lxsdagzznjgpt
-      requestList: [{appKey: 'zjsdagzznjgpt', urlType: 'TASK_FEEDBACK', url: 'http://59.202.44.189:8080/sgportalapi/openApi/taskFeedback', secret: 'jU6xT9Jfn1CML5d82FltVqEerbXKROP4'}]
-      appidSecretList: [{appid: lanxswbgs, secret: JvDj8iJSgxRqy7cceN4WG1L98NzjyrWt98crsQik84Q=, unitCode: GO_2e986b8ac4c44dcaba93b0790055b46e}]
-      accessTokenUrl: http://sgportal.app.svc.cluster.local:8888/sgportalapi/open_api/get_access_token
-      taskListUrl: http://sgportal.app.svc.cluster.local:8888/sgportalapi/open_api/get_task_list
-      downloadFileUrl: http://sgportal.app.svc.cluster.local:8888/sgportalapi/open_api/download_file
-      startTaskUrl: http://sgportal.app.svc.cluster.local:8888/sgportalapi/open_api/start_task
-      finishTaskUrl: http://sgportal.app.svc.cluster.local:8888/sgportalapi/open_api/finish_task
-      getBusinessEvaluatePage: http://sgportal.app.svc.cluster.local:8888/sgportalapi/open_api/get_business_evaluate_page
-      businessEvaluate: lanxswbgs
-    unit:
-      code: GO_2e986b8ac4c44dcaba93b0790055b46e,J000
-    # 浙政钉消息的租户ID
-    sms:
-      dxt:
-        user: lxdag
-        siid: LXSDAG
-        secretKey: lxdag12!@
-        #restServiceURL: http://220.191.230.128/29/smsservice/httpservices/capService
-        restServiceURL: http://smservice.zjhcsoft.com/smsservice/httpservices/capService
-    message:
-      tenantId: 196729
-      sra:
-        sgportal: 智治平台公钥加密
-        publicKey: xxx
-    sso:
-      ### 登录中心地址
-      login-domain:  https://da.nbjb.gov.cn
-    cdn:
-      host: https://da.nbjb.gov.cn/cdn/
-    index:
-      hash: f9ac2178298983778060,2ebb4a9fd19eca3763a9,c6493b32e404c6536ac2,e6d7eba89a37acc0ef8b,a0da33bd6ff659c9a195,ccaad047875de8ee2af0,[gitBranch=micro_menu]-[gitUser=lijp]-[打包时间=2023-11-23 11:33]-[COMMIT_SHA=3f8d748a3ca877787c5b81d79037f3095a779e40]
-    rocketmq:
-      consumer:
-        group-name: GP_SGPORTAL
-        namesrv-addr: 10.68.190.225:28091
-        task:
-          group-name: sgportal-group
-          namesrv-addr: 10.68.190.225:28091
-      producer:
-        group-name: sgportal-group
-        namesrv-addr: 10.68.190.225:28091
-    boot:
-      blobstore:
-        spring:
-          boot:
-            blob-store-impl-name: MinIOBlobStore
-            primaryBId: 1
-            routeStrategy: random
-            store-nodes:
-              - bId: 1
-                endPoint: http://10.68.190.225:9000
-                accessKey: admin
-                secretKey: Dctm@1234
-                bucketName: sgportal
-        #            blob-store-impl-name: OSSBlobStore
-        #           primaryBId: 1
-        #          routeStrategy: random
-        #         store-nodes:
-        #          - bId: 1
-        #           endPoint: https://oss-cn-jinhua-jhzwy-d01-a.inner.jhszwy.net
-        #          accessKey: 0CqNa76r0jElX3nt
-        #         secretKey: kJWsQoeOgU7NrEKiFPo9O9l190A3H0
-        #        bucketName: lxs-dag-zhdhgrj
-    config:
-      #下面新增如下配置，填写的是展览报名移动端页面的地址，防止更换域名
-      openExhibitUrl: https://szda.lx.gov.cn
-      #档案馆单位编码 档案备份利用
-      archivesCenterUnitCode: GO_2e986b8ac4c44dcaba93b0790055b46e
-      #档案馆初审角色名称
-      archivesCenterApprovalRoleName: 档案馆初审员
-      #档案馆复审角色名称
-      archivesCenterReviewRoleName: 档案馆复审员
-      #立档单位初审员
-      archivesUnitApprovalRoleName: 立档单位初审员
-      #立档单位复审员
-      archivesUnitReviewRoleName: 立档单位复审员
-      #用户签名集合(值请使用标准的json字符串)，userId:用户id，signFilePath:签名文件路径(minio上的路径，sgportal/ 开头)
-      #userSignList: "[{'userId':'1676507796268412929','signFilePath':'sgportal/sign/测试.png'},
-      #{'userId':'1676089987420467202','signFilePath':'sgportal/sign/孟捷.png'}]"
-      userSignList: "[]"
-      validator:
-        #四性检测所需_categoryId
-        categoryId: 240d3410-21fc-4c03-8282-0c1e495e474d
-        #四性检测所需_sceneCode
-        sceneCode: intelligence_open_appraisal
-        #四性检测所需_schemeId
-        schemeId: bdf1b066-6ef2-4024-a68b-c53a2ffa00eb
-        #四性检测所需_metadataSchemeCode
-        metadataSchemeCode: ZZMH219
-        #四性检测所需_元数据的创建单位编码
-        unitCode: GO_2e986b8ac4c44dcaba93b0790055b46e
-        #四性检测所需_元数据的创建单位名称
-        unitName: 江北区档案馆
-mybatis-plus:
-  mapper-locations: classpath:mapper/mysql/*.xml
-  type-aliases-package: cn.amberdata.sgportal.persistence.po
-name:
-  sgportal: 江北区档案工作智治门户
-  # 这个moudlename  取值是admin中配置的业务员系统的名称
-  moudlename: 数字档案室,智治平台,利用平台
-sgportal:
-  #以下为2.18版本增加内容
-  #租户ID
-  tenantId: 1703030350496030721
-  #树形选择框的根节点,可以是租户ID或者某个节点ID
-  rootNodeId: 1703030350496030721
-  #定时任务
-  #2.18增加截止
-  #“年报统计”模块，限制一年只登记一次
-  switch:
-    flag: true
-  archiveRegistration:
-    audit:
-      #unitCode: GO_33e9275100f444958f98134fa6206b6c
-      unitCode: GO_33e9275100f444958f98134fa6206b6p
-      #下方新增如下配置，档案登记审核单位名字
-      unitName: 江北区档案馆
-  prefix:
-    lawEnforcementInspections: 江档检
-    archiveRegistration: 江档登
-  #档案局单位编码
-  archivesBureau:
-    unitCode: GO_33e9275100f444958f98134fa6206b6a
-  #档案馆单位编码
-  archives:
-    unitCode: GO_2e986b8ac4c44dcaba93b0790055b46e
-    unitCode1: ZZMH
-    unitCode2: zccs
-  #用于临平
-  ermsBucketName: ecmcore
-  schedule:
-    #V2.17版本增加开始
-    #下方新增如下配置，保存浙政订登录信息
-    #浙政钉登录信息
-    ZZDLoginInformationScheduleCron: 0 0 1 * * ?
-    ZZDLoginInformationEnable: true
-    #V2.17版本增加截止
-    #以下为2.18版本增加内容
-    #移交接收系统 - 单位移交详情
-    EntryUnitStateScheduleCron: 12 0 1 * * ?
-    EntryUnitStateScheduleEnable: true
-    #2.18增加截止
-    #新增业务评价 定时任务 每小时执行一次
-    MarkErrorRecordScheduleCron: 0 0 */1 * * ?
-    MarkErrorRecordEnable: true
-    #2.16版本增加上俩行
-    scoringScheduleCron: 0 */1 * * * ?
-    scoringScheduleEnable: false
-    serviceProjectContractInfoScheduleCron: 0 */1 * * * ?
-    serviceProjectContractInfoScheduleEnable: true
-    leaderScheduleCron: 0 0 1 * * ?
-    ## 在下面加上以下内容
-    leaderResourceScheduleCron: 0 0 1 * * ?
-    leaderQueryScheduleCron: 0 0 1 * * ?
-    leaderScheduleEnable: true
-    #是否为常态化企业定时任务 更新时间，每年一月一号一点
-    normalizationServiceUnitScheduleCron: 0 0 0/1 * * ?
-    normalizationServiceUnitScheduleEnable: true
-    #更新任务是否预期并发送消息 早上8点执行nacos
-    updateTaskStateScheduleCron: 0 0 8 * * ?
-    updateTaskStateScheduleEnable: true
-    #培训计划发送消息 早10点执行
-    trainingPlanSendMessageScheduleCron: 0 0 10 * * ?
-    trainingPlanSendMessageScheduleEnable: true
-    #“传统载体档案”图表的定时任务 早1点执行
-    unitAnnualStatisticsScheduleCron: 0 0 1 * * ?
-    unitAnnualStatisticsScheduleEnable: true
-    #档案鉴定指数定时任务 早2点执行
-    archivalIdentificationScheduleCron: 0 0 2 * * ?
-    archivalIdentificationScheduleEnable: true
-    #专题档案收集定时任务
-    thematicArchivesCollectionScheduleCron: 0 0 2 * * ?
-    thematicArchivesCollectionEnable : true
-    # 下面增加编研成果定时任务
-    ResearchResultInfoScheduleCron: 0 0 2 * * ?
-    ResearchResultInfoEnable: false
-    #业务评价定时任务
-    businessEvaluationScheduleCron: 0 0 1 * * ?
-    businessEvaluationScheduleEnable: true
-    villageFileTownManagementSchedule: 0 0 2 * * ?
-    villageFileTownManagementEnable: true
-    photoArchiveSchedulCron: 12 0 2 * * ?
-    photoArchiveSchedulEnable: true
-    #质检结果
-    manualInspectionReportsScheduleCron: 6 0 2 * * ?
-    manualInspectionReportsScheduleEnable: true
-    #默认2分钟执行一次，可不用配置
-    writeSlsLog: 0 0/2 * * * ?
-  feedback:
-    unitCode: zzpt,lxdag,GO_2e986b8ac4c44dcaba93b0790055b46e
-  sls:
-    #应用编码
-    appCode: A330000100000202105004179
-    #地区编码
-    areaCode: 330101
-    #日志文件路径，Linux系统，必须以正斜线（/）开头
-    filePath: /var/logs
-    #日志文件名称
-    fileName: access_log.log
-  swagger:
-    production: false
-    basic:
-      enable: true
-      username: sg_admin
-      password: Dctm@1234
-  # 调用edas第三方远程接口需要的参数
-  edas:
-    edasTokenUrl: http://172.24.145.66:8069/public/oauth2/token
-    grantType: client_credentials
-    scope: MATTER
-    clientId: risen_OAsPZbuhYBa5Yw9dURtd3A
-    clientSecret: NgvRsZbGjJ1kY5hvqxAqaMwmC9upfKiBdhYqeVftynidwf608t94lcuCo2qJ1pYG
-    edasHandlingUrl: http://172.24.145.66:8069/public/service/endPoint.do
-    metaServiceCode: bsGwylyService#statisBsGwyly
-    metaVer: V01
-    dataType: 3
-    oAUrl: http://10.24.28.226:8055/public/service/getArchivedMsg.action
-application:
-  white:
-    header:
-      host: 10.24.162.174,szda.lx.gov.cn,localhost:8888,xt.szda.lx.gov.cn
-    redirect:
-      host: 10.24.162.174,szda.lx.gov.cn,localhost:8888,xt.szda.lx.gov.cn
-buservice:
-  zookeeper:
-    host: zookeeper://10.68.190.225:28091
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: docviewzlb
+  namespace: app
+  labels:
+    app: docviewzlb
+    app.kubernetes.io/managed-by: Helm
+    app.kubesphere.io/instance: docviewzlb
+    chart: docviewzlb-1.0.0
+    release: docviewzlb
+    velero.io/backup-name: app
+    velero.io/restore-name: app-20230606094257
+  annotations:
+    deployment.kubernetes.io/revision: '1'
+    kubesphere.io/creator: admin
+    meta.helm.sh/release-name: docviewzlb
+    meta.helm.sh/release-namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docviewzlb
+      release: docviewzlb
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: docviewzlb
+        release: docviewzlb
+      annotations:
+        kubesphere.io/creator: admin
+    spec:
+      volumes:
+        - name: time
+          hostPath:
+            path: /etc/localtime
+            type: ''
+      containers:
+        - name: docviewzlb
+          image: 'hzent.amberdata.cn:8082/docview_zlb:4.0'
+          command:
+            - nginx
+            - '-g'
+            - daemon off;
+          ports:
+            - name: hostport
+              containerPort: 7014
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - name: time
+              readOnly: true
+              mountPath: /etc/localtime
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      imagePullSecrets:
+        - name: dev
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

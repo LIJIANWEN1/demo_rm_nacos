@@ -23,6 +23,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.demo1_nacos.Demo1NacosApplication;
 import com.example.demo1_nacos.pojo.YC.CertificatePO;
 import com.example.demo1_nacos.pojo.YC.OrderInfo;
 import com.example.demo1_nacos.pojo.YC.YCResult;
@@ -44,6 +45,8 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -82,6 +85,8 @@ public class UpdateArchiveServiceImpl {
     @Resource
     private RecordRepository recordRepository;
 
+    private static final Logger StartLogger = LoggerFactory.getLogger(UpdateArchiveServiceImpl.class);
+
     Map<String,String> codeMap = new HashMap<>();
 
     public void updateArchivalId(String path,String archiveType) {
@@ -101,9 +106,9 @@ public class UpdateArchiveServiceImpl {
             updateRecord.updateJsonMetadata(documentContext.jsonString());
             fixedThreadPool.execute(() -> {
                 recordRepository.store(updateRecord);
-                System.out.println("---旧档号---" + record.getArchivalId() + "-----" + third_class_code);
+                StartLogger.error("---旧档号---" + record.getArchivalId() + "-----" + third_class_code);
             });
-            System.out.println("------修改完成----");
+            StartLogger.error("------修改完成----");
         }
     }
 
@@ -155,7 +160,7 @@ public class UpdateArchiveServiceImpl {
     @Resource
     private VolumeRepository volumeRepository;
 
-    ExecutorService fixedThreadPool = Executors.newFixedThreadPool(50);
+    ExecutorService fixedThreadPool = Executors.newFixedThreadPool(500);
 
     public void addWSBlock(String objectType) {
         SessionContext.setSession(SessionUtil.getAdminSession());
@@ -267,37 +272,49 @@ String newJsonStr = "";
             try {
                 record = recordRepository.find(sysObjectDO.getId());
             } catch (Exception e) {
+                System.out.println("----1.根据id构造record失败---"+sysObjectDO.getId());
                 e.printStackTrace();
             }
             if(null == record){
                 System.out.println("1空数据"+record.getObjectId().getId());
                 continue;
             }
+            System.out.println("----1.根据id构造record成功---"+sysObjectDO.getId());
             String newJsonStr = repairDocDate(record.getJsonMetadata());
             if(StringUtils.isBlank(newJsonStr)){
+                System.out.println("----2.根据json 生成新json失败---"+sysObjectDO.getId());
                 continue;
             }
+            System.out.println("----2.根据json 生成新json成功---"+sysObjectDO.getId());
             Record updateRecord = null;
             try {
                 updateRecord = recordRepository.findByIdAndUpdateJsonMetadata(record.getObjectId().getId(), newJsonStr);
             } catch (Exception e) {
+                System.out.println("----3.根据json 生成新json失败---"+sysObjectDO.getId()+"---"+record.getObjectId().getId());
                 e.printStackTrace();
             }
             if(null == updateRecord){
                 System.out.println("2空数据"+record.getObjectId().getId());
                 continue;
             }
+            System.out.println("----3.根据json 生成新json成功---"+sysObjectDO.getId());
             updateRecord.update();
             updateRecord.setString("update_doc_date_status","01");
             updateRecord.updateJsonMetadata(newJsonStr);
             Record finalUpdateRecord = updateRecord;
             fixedThreadPool.execute(() -> {
-                recordRepository.store(finalUpdateRecord);
+                try {
+                    recordRepository.store(finalUpdateRecord);
+                } catch (Exception e) {
+                    System.out.println("----4.档案保存失败---"+sysObjectDO.getId());
+                    e.printStackTrace();
+                }
                 a.getAndSet(a.get() - 1);
                 System.out.println(a.get());
             });
         }
         System.out.println("------修改完成----");
+        System.out.println("2323232323");
     }
 
     public void repairXCSJFormat(String objectType) {
@@ -354,7 +371,9 @@ String newJsonStr = "";
         return  parse.jsonString();
     }
 
-    private String repairDocDate(String aa){
+    private static String repairDocDate(String aa){
+        String orgKewWord = "doc_date";
+        String keyword = "xcsj";
         DocumentContext parse = JsonPath.parse(aa);
         //-------江北文书卷内 开始-----------
         //江北文书卷内
@@ -363,48 +382,22 @@ String newJsonStr = "";
         if(read.size()==0){
             System.out.println("内容信息 block---");
         }
-        List<Map<String,Object>> list = (List<Map<String, Object>>) read.get(0);
-        Map<String,Object> val = new HashMap<>();
-        val.put("name","xcsj");
-        val.put("title","形成时间");
-        val.put("content",docDate);
-        list.add(val);
-        parse.set("$.record..[?(@.name == '内容信息')].property",list);
+        List<Map<String,Object>> bb = parse.read("$.record..[?(@.name == '"+keyword+"')].title");
+        if(bb.size()>0){
+            System.out.println("存在形成时间字段");
+            parse.put("$.record..[?(@.name == '" + keyword + "')]", "content", docDate);
+        }else {
+            List<Map<String,Object>> list = (List<Map<String, Object>>) read.get(0);
+            Map<String,Object> val = new HashMap<>();
+            val.put("name","xcsj");
+            val.put("title","形成时间");
+            val.put("content",docDate);
+            list.add(val);
+            parse.set("$.record..[?(@.name == '内容信息')].property",list);
+        }
+        parse.delete("$.record..[?(@.name == '" + orgKewWord + "')].content");
         //-------江北文书卷内 结束-----------
-//        String doc_date = readJson(aa,"doc_date");
-//        String xcsj = readJson(aa,"XCSJ");
-//        if (!StringUtils.isBlank(xcsj)) {
-//            System.out.println("XCSJ有值----"+achId);
-//            return "";
-//        }
-//        System.out.println(xcsj);
-//        List<Map<String,String>> a= parse.read("$.record..[?(@.name == '业务信息')].property");
-//        if(a.size()==0){
-////            parse =  addSWRecord(parse);
-////            a= parse.read("$.record..[?(@.name == '业务信息')].property");
-//            if(a.size()==0){
-//                System.out.println("不存在业务信息 block---"+achId);
-//                return "";
-//            }
-//        }
-//        List<Map<String,String>> list = null;
-//        if (a.get(0) instanceof LinkedHashMap){
-//            list = new ArrayList<Map<String, String>>();
-//            list.add(a.get(0));
-//            Map<String,String> val = new HashMap<>();
-//            val.put("name","XCSJ");
-//            val.put("title","文件形成时间");
-//            val.put("content",repairXCSJgs(doc_date));
-//            list.add(val);
-//        }else if(a.get(0) instanceof List){
-//            list = (List<Map<String, String>>) a.get(0);
-//            Map<String,String> val = new HashMap<>();
-//            val.put("name","XCSJ");
-//            val.put("title","文件形成时间");
-//            val.put("content",repairXCSJgs(doc_date));
-//            list.add(val);
-//        }
-//        parse.set("$.record..[?(@.name == '业务信息')].property",list);
+
         return  parse.jsonString();
     }
 
@@ -568,35 +561,6 @@ String newJsonStr = "";
 
     public static void main(String[] args) throws DocumentException {
         String sdsds = "{\"record\":{\"version_no\":\"1\",\"metadata_scheme_name\":\"文书档案（卷内）\",\"block\":[{\"name\":\"归档信息\",\"block\":[{\"name\":\"资源标识\",\"property\":[{\"name\":\"archival_id\",\"title\":\"档号\",\"content\":\"038-002-022-060\"},{\"name\":\"doc_number\",\"title\":\"文件编号\"},{\"name\":\"fonds_id\",\"title\":\"全宗号\",\"content\":\"J038\"},{\"name\":\"catalog_code\",\"title\":\"目录号\",\"content\":\"002\"},{\"name\":\"volume_id\",\"title\":\"案卷号\",\"content\":\"022\"},{\"name\":\"item_code\",\"title\":\"卷内顺序号\",\"content\":\"27\"},{\"name\":\"archive_1st_category\",\"title\":\"一级门类编码\",\"content\":\"WS\"},{\"name\":\"category_code\",\"title\":\"门类编码\",\"content\":\"WS·B\"},{\"name\":\"classification_number\",\"title\":\"分类号\"},{\"name\":\"DAGDM\",\"title\":\"档案馆代码\"}]},{\"name\":\"访问控制信息\",\"property\":[{\"name\":\"security_class\",\"title\":\"密级\",\"content\":\"L4\"},{\"name\":\"open_class\",\"title\":\"开放状态\"}]},{\"name\":\"说明信息\",\"property\":[{\"name\":\"retention_period\",\"title\":\"保管期限\",\"content\":\"C\"},{\"name\":\"fonds_name\",\"title\":\"全宗名称\"},{\"name\":\"original_status\",\"title\":\"原件状态\"},{\"name\":\"remark\",\"title\":\"备注\",\"content\":\"敏感信息已转移\"},{\"name\":\"job_no\",\"title\":\"工号\"},{\"name\":\"file_year\",\"title\":\"年度\",\"content\":\"0\"},{\"name\":\"filed_by\",\"title\":\"归档人\"},{\"name\":\"archives_num\",\"title\":\"归档份数\",\"content\":\"1\"},{\"name\":\"filed_date\",\"title\":\"归档日期\"},{\"name\":\"file_department\",\"title\":\"归档部门\"},{\"name\":\"doc_date\",\"title\":\"形成日期\",\"content\":\"0000-00-00\"},{\"name\":\"description\",\"title\":\"描述\"},{\"name\":\"digitized_status\",\"title\":\"数字化状态\"},{\"name\":\"owner\",\"title\":\"文件所有者\"},{\"name\":\"exist_document\",\"title\":\"是否有原文\",\"content\":\"false\"},{\"name\":\"author\",\"title\":\"责任者\"},{\"name\":\"material_num\",\"title\":\"载体数量\"},{\"name\":\"carrier_type\",\"title\":\"载体类型\",\"content\":\"02\"},{\"name\":\"doc_attachments\",\"title\":\"附件名称\"},{\"name\":\"page_num\",\"title\":\"页号\"},{\"name\":\"doc_pages\",\"title\":\"页数\"},{\"name\":\"title\",\"title\":\"题名\",\"content\":\"038-002-022-060\"}]},{\"name\":\"管理信息\"}]},{\"name\":\"业务内容\",\"block\":[{\"name\":\"过程信息\"},{\"name\":\"内容信息\",\"property\":[{\"name\":\"BSMTX\",\"title\":\"不扫描图像\"},{\"name\":\"ZTC\",\"title\":\"主题词\"},{\"name\":\"QWBS\",\"title\":\"全文标识\"},{\"name\":\"GJC\",\"title\":\"关键词\"},{\"name\":\"KZF\",\"title\":\"控制符\"},{\"name\":\"WJSSRM\",\"title\":\"文件所涉人名\"},{\"name\":\"HH\",\"title\":\"盒号\"},{\"name\":\"GB\",\"title\":\"稿本\"},{\"name\":\"ZTGG\",\"title\":\"载体规格\"},{\"name\":\"SXH\",\"title\":\"顺序号\"},{\"name\":\"APPRAISAL_STATUS_XH\",\"title\":\"销毁鉴定状态\"},{\"name\":\"SHELVES_STATUS\",\"title\":\"上架状态\"},{\"name\":\"ITEM_COUNT\",\"title\":\"电子全文数\"},{\"name\":\"PDF_PAGES\",\"title\":\"PDF页数\"},{\"name\":\"STARAGE_PLACE\",\"title\":\"档案存址\"},{\"name\":\"ENTRY_STATUS\",\"title\":\"进馆状态\"},{\"name\":\"ZZYM\",\"title\":\"终止页码\"},{\"name\":\"DATA_SOURCE\",\"title\":\"数据来源\",\"content\":\"2\"},{\"name\":\"physical_archive_location\",\"title\":\"档案存址\",\"content\":\"001-001-006B-004-001\"},{\"name\":\"ZTLX\",\"title\":\"专题类型\"},{\"name\":\"FZ\",\"title\":\"附注\"}]}]},{\"name\":\"电子文件\"}],\"metadata_scheme_code\":\"WS·B-ITEM\"}}";
-//        String sdsds = "{\"record\":{\"version_no\":\"2\",\"metadata_scheme_name\":\"文书档案（卷内）\",\"block\":[{\"name\":\"归档信息\",\"block\":[{\"name\":\"资源标识\",\"property\":[{\"name\":\"archive_1st_category\",\"title\":\"一级门类编码\",\"content\":\"WS\"},{\"name\":\"fonds_id\",\"title\":\"全宗号\",\"content\":\"0014\"},{\"name\":\"classification\",\"title\":\"分类号\",\"content\":\"013\"},{\"name\":\"item_code\",\"title\":\"顺序号\",\"content\":\"34\"},{\"name\":\"volume_id\",\"title\":\"案卷号\",\"content\":\"004\"},{\"name\":\"archival_id\",\"title\":\"档号\",\"content\":\"0014-2006-004-302\"},{\"name\":\"catalog_code\",\"title\":\"目录号\"},{\"name\":\"category_code\",\"title\":\"门类编码\",\"content\":\"WS·B\"},{\"name\":\"GDM\",\"title\":\"档案馆代码\"},{\"name\":\"aj_archival_id\",\"title\":\"案卷级档号\",\"content\":\"0014-2006-004\"}]},{\"name\":\"访问控制信息\",\"property\":[{\"name\":\"secrecy_period\",\"title\":\"保密期限\"},{\"name\":\"released_network\",\"title\":\"发布网段\"},{\"name\":\"security_class\",\"title\":\"密级\"},{\"name\":\"open_class\",\"title\":\"开放状态\"},{\"name\":\"decryption_status\",\"title\":\"解密标识\"}]},{\"name\":\"说明信息\",\"property\":[{\"name\":\"subject\",\"title\":\"主题词\"},{\"name\":\"retention_period\",\"title\":\"保管期限\",\"content\":\"Y\"},{\"name\":\"fonds_name\",\"title\":\"全宗名称\"},{\"name\":\"GJC\",\"title\":\"关键词\"},{\"name\":\"original_status\",\"title\":\"原件状态\"},{\"name\":\"remark\",\"title\":\"备注\"},{\"name\":\"job_no\",\"title\":\"工号\"},{\"name\":\"file_year\",\"title\":\"年度\",\"content\":\"2006\"},{\"name\":\"ZYH\",\"title\":\"张页号\",\"content\":\"302\"},{\"name\":\"filed_by\",\"title\":\"归档人\"},{\"name\":\"archives_num\",\"title\":\"归档份数\",\"content\":\"1\"},{\"name\":\"filed_date\",\"title\":\"归档日期\"},{\"name\":\"file_department\",\"title\":\"归档部门\"},{\"name\":\"doc_date\",\"title\":\"形成时间\",\"content\":\"2006-01-06T00:00\"},{\"name\":\"description\",\"title\":\"描述\"},{\"name\":\"digitized_status\",\"title\":\"数字化状态\"},{\"name\":\"owner\",\"title\":\"文件Owner\"},{\"name\":\"doc_number\",\"title\":\"文件编号\",\"content\":\"\"},{\"name\":\"exist_document\",\"title\":\"是否有原文\",\"content\":\"true\"},{\"name\":\"HH\",\"title\":\"盒号\"},{\"name\":\"author\",\"title\":\"责任者\",\"content\":\"龙游县人民代表大会常务委员会\"},{\"name\":\"material_num\",\"title\":\"载体数量\"},{\"name\":\"carrier_type\",\"title\":\"载体类型\",\"content\":\"02\"},{\"name\":\"doc_attachments\",\"title\":\"附件名称\"},{\"name\":\"annotation\",\"title\":\"附注\"},{\"name\":\"doc_pages\",\"title\":\"页数\"},{\"name\":\"title\",\"title\":\"题名\",\"content\":\"辞职报告(朱素芳;郑锦荣;毛根民;劳红霞)\"},{\"name\":\"ZTGG\",\"title\":\"载体规格\"},{\"name\":\"FJ\",\"title\":\"附件\"},{\"name\":\"GB\",\"title\":\"稿本\"}]},{\"name\":\"管理信息\"}]},{\"name\":\"业务内容\",\"block\":[{\"name\":\"过程信息\"},{\"name\":\"内容信息\"}]},{\"name\":\"电子文件\",\"file\":[{\"checksum_type\":\"md5\",\"size\":919593,\"name\":\"0014-2006-004-302.pdf\",\"format\":\"pdf\",\"checksum\":\"08712064bd1e39e3651f0c907749efdc\",\"creation_date\":\"2023-05-05T21:51:04.930\",\"modify_date\":\"2023-05-05T21:51:04.930\",\"seq\":1,\"url\":\"/0014-2006-004-302.pdf\"}]},{\"name\":\"业务信息\"}],\"metadata_scheme_code\":\"WS·B-ITEM\"}}";
-        DocumentContext parse = JsonPath.parse(sdsds);
-//        parse = addWsRecordInVolume(parse);
-        List<Map<String,Object>> bb = parse.read("$.record.block[*].property[?(@.name == 'XCSJ')]");
-        if(bb.size()>0){
-            System.out.println("存在形成时间字段跳过");
-//            parse.set("$.record.block[*].property[?(@.name == 'XCSJ')].content","12121212");
-        }
-//        List<Map<String,Object>> ywarr = parse.read("$.record.block[?(@.name=='内容信息')]");
-//        if(ywarr.size()>0) {
-//            parse.add("$.record.block[?(@.name=='内容信息')].property",
-//                    Configuration.defaultConfiguration().jsonProvider().parse(String.format("{\"name\":\"aa\",\"title\":\"bbb\",\"content\":\"%s\"}", "ccccc")));
-//        }
-//        String updatedJson = parse.jsonString();
-//        System.out.println(updatedJson);
-
-        //江北文书卷内
-        Object docDate = readJson(sdsds,"doc_date");
-        List<Map<String,String>>  read = parse.read("$.record..[?(@.name == '内容信息')].property");
-        if(read.size()==0){
-            System.out.println("内容信息 block---");
-        }
-        List<Map<String,Object>> list = (List<Map<String, Object>>) read.get(0);
-        Map<String,Object> val = new HashMap<>();
-        val.put("name","xcsj");
-        val.put("title","文件形成时间");
-        val.put("content",docDate);
-        list.add(val);
-        parse.set("$.record..[?(@.name == '内容信息')].property",list);
-        System.out.println(parse.jsonString());
+        System.out.println(repairDocDate(sdsds));
     }
 }
