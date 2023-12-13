@@ -1,1 +1,4 @@
-curl "http://100.90.27.5:8777/jkapi/operation_bucket?operation=get_location&bucketName=jbdag&n=1"
+curl "http://localhost:8777/jkapi/operation_bucket?operation=get_location&bucketName=jbdag&n=1"
+curl "http://localhost:8777/jkapi/operation_bucket?operation=get_storage_info&bucketName=jbdag&n=1"
+
+./obsutil config -i=C6F10C33628FCD399723 -k=ifVuya9z9sWADZ5LKtUFrRz0wPAAAAGJYo/NORT4 -e=https://obs.pub.yun.nb

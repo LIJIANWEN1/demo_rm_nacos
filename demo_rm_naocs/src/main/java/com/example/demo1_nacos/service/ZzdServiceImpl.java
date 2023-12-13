@@ -1,5 +1,6 @@
 package com.example.demo1_nacos.service;
 
+import cn.amberdata.admin.domain.Organization;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.xxpt.gateway.shared.api.request.OapiMoziOrganizationGetOrganizationByCodeRequest;
@@ -39,26 +40,26 @@ public class ZzdServiceImpl {
         return executableClient;
     }
 
-//    public Organization getOrgDetail( String code,String admin_tenantid) {
-//        ExecutableClient zzdSyncConfig = executableClient();
-//        IntelligentPostClient intelligentPostClient = zzdSyncConfig.newIntelligentPostClient(ORG_DETAIL_BY_CODE);
-//        OapiMoziOrganizationGetOrganizationByCodeRequest codeRequest = new OapiMoziOrganizationGetOrganizationByCodeRequest();
-//        codeRequest.setTenantId(Long.valueOf(admin_tenantid));
-//        codeRequest.setOrganizationCode(code);
-//        OapiMoziOrganizationGetOrganizationByCodeResponse codeResponse = intelligentPostClient.post(codeRequest);
-//        if (codeResponse.getSuccess()) {
-//            OapiSpResultContent content = codeResponse.getContent();
-//            if (content.getSuccess()) {
-//                String resData = content.getData();
-//                log.info("浙政钉根据组织code获取详情：" + resData);
-//            } else {
-//                log.info("获取组织详情失败", content.getResponseMessage());
-//            }
-//        }
-//        log.info("浙政钉根据组织code获取详情失败  err_msg：" + codeResponse.getMessage());
-//        log.info("浙政钉根据组织code获取详情失败  err_code：" + codeResponse.getBizErrorCode());
-//        return null;
-//    }
+    public Organization getOrgDetail(String code, String admin_tenantid) {
+        ExecutableClient zzdSyncConfig = executableClient();
+        IntelligentPostClient intelligentPostClient = zzdSyncConfig.newIntelligentPostClient(ORG_DETAIL_BY_CODE);
+        OapiMoziOrganizationGetOrganizationByCodeRequest codeRequest = new OapiMoziOrganizationGetOrganizationByCodeRequest();
+        codeRequest.setTenantId(Long.valueOf(admin_tenantid));
+        codeRequest.setOrganizationCode(code);
+        OapiMoziOrganizationGetOrganizationByCodeResponse codeResponse = intelligentPostClient.post(codeRequest);
+        if (codeResponse.getSuccess()) {
+            OapiSpResultContent content = codeResponse.getContent();
+            if (content.getSuccess()) {
+                String resData = content.getData();
+                log.info("浙政钉根据组织code获取详情：" + resData);
+            } else {
+                log.info("获取组织详情失败", content.getResponseMessage());
+            }
+        }
+        log.info("浙政钉根据组织code获取详情失败  err_msg：" + codeResponse.getMessage());
+        log.info("浙政钉根据组织code获取详情失败  err_code：" + codeResponse.getBizErrorCode());
+        return null;
+    }
 
     public  boolean orgHaveUsers( String code, String admin_tenantid) {
         log.info("进来了1");
