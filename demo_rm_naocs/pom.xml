@@ -21,11 +21,10 @@
         <framework.version>1.1</framework.version>
 
         <elasticsearch.version>7.0.0</elasticsearch.version>
-        <mongo.driver.version>3.12.3</mongo.driver.version>
         <redis.version>3.3.0</redis.version>
         <aliyun.oss.version>3.8.1</aliyun.oss.version>
         <mysql.driver.version>5.1.40</mysql.driver.version>
-        <amberdata_common.cache.version>1.2.9</amberdata_common.cache.version>
+        <amberdata_common.cache.version>1.2.5</amberdata_common.cache.version>
         <commons-io.version>2.8.0</commons-io.version>
         <commons-lang3.version>3.11</commons-lang3.version>
     </properties>
@@ -61,12 +60,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.mongodb</groupId>
-                <artifactId>mongo-java-driver</artifactId>
-                <version>${mongo.driver.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>redis.clients</groupId>
                 <artifactId>jedis</artifactId>
                 <version>${redis.version}</version>
@@ -90,6 +83,12 @@
                 <version>${amberdata_common.cache.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib</artifactId>
+                <version>1.4.21</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo-spring-boot-starter</artifactId>
                 <version>3.1.1</version>
@@ -108,73 +107,89 @@
             </dependency>
 
             <dependency>
+                <groupId>cn.amberdata.boot</groupId>
+                <artifactId>blobstore-spring-boot-starter</artifactId>
+                <version>2.1.6</version>
+            </dependency>
+
+            <dependency>
                 <groupId>cn.amberdata</groupId>
                 <artifactId>osprey-facade</artifactId>
                 <version>1.1.5</version>
             </dependency>
-            <dependency>
-                <groupId>com.squareup.okhttp3</groupId>
-                <artifactId>okhttp</artifactId>
-                <version>4.9.0</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.amberdata</groupId>
-                <artifactId>metadata-facade</artifactId>
-                <version>xs-4.0.1</version>
-            </dependency>
 
-            <dependency>
-                <groupId>cn.amberdata.boot</groupId>
-                <artifactId>blobstore-spring-boot-starter</artifactId>
-                <version>2.1.3</version>
-            </dependency>
+            <!--    <dependency>-->
+            <!--        <groupId>org.springframework</groupId>-->
+            <!--        <artifactId>spring-context</artifactId>-->
+            <!--        <version>5.1.14.RELEASE</version>-->
+            <!--    </dependency>-->
         </dependencies>
+
     </dependencyManagement>
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>5.1.14.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jamesmurty.utils</groupId>
-            <artifactId>java-xmlbuilder</artifactId>
-            <version>1.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.iharder</groupId>
-                    <artifactId>base64</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.8.0</version>
         </dependency>
 
-        <!--zzd-->
+        <!-- dubbo -->
         <dependency>
-            <groupId>com.alibaba.xxpt</groupId>
-            <artifactId>sdk</artifactId>
-            <version>1.2.0</version>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>3.1.1</version>
         </dependency>
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.alibaba.nacos/nacos-client &ndash;&gt;-->
+        <!-- zookeeper curator client -->
         <dependency>
-            <groupId>com.alibaba.nacos</groupId>
-            <artifactId>nacos-client</artifactId>
-            <version>1.4.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.nacos</groupId>
-            <artifactId>nacos-api</artifactId>
-            <version>1.4.1</version>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.21.5</version>
         </dependency>
         <dependency>
-            <groupId>fakepath</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
-            <version>157</version>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-framework</artifactId>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>log4j</artifactId>
+                    <groupId>log4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>netty</artifactId>
+                    <groupId>io.netty</groupId>
+                </exclusion>
+            </exclusions>
+            <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.alibaba.nacos</groupId>
-            <artifactId>nacos-common</artifactId>
-            <version>1.4.1</version>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-recipes</artifactId>
+            <version>4.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-x-discovery</artifactId>
+            <version>4.2.0</version>
+        </dependency>
+
+        <!-- admin sso and facade -->
+        <dependency>
+            <groupId>cn.amberdata</groupId>
+            <artifactId>admin-authing-starter</artifactId>
+            <version>1.0.17</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.amberdata</groupId>
+            <artifactId>admin-export-facade</artifactId>
+            <version>1.0.13</version>
+        </dependency>
+
+        <!-- hibernate-validator -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.2.5.Final</version>
         </dependency>
 
         <dependency>
@@ -183,21 +198,195 @@
             <version>2.1.4.RELEASE</version>
         </dependency>
 
+        <!--去掉spring-boot自带的日志组件-->
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.6</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-log4j2</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--配置部署到tomcat-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.83</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+            <version>3.4.2</version>
+        </dependency>
+
+        <!--swagger工具包开始-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.8.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>reflections</artifactId>
+                    <groupId>org.reflections</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.8.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>swagger-bootstrap-ui</artifactId>
+            <version>1.9.4</version>
+        </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-thymeleaf</artifactId>-->
+        <!--        </dependency>-->
+
+        <dependency>
+            <groupId>cn.amberdata</groupId>
+            <artifactId>rm-core</artifactId>
+            <version>2.0.23-afcupgrade</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>cn.amberdata</groupId>
+                    <artifactId>admin-facade</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>cn.amberdata</groupId>
+                    <artifactId>search-facade</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>e-iceblue</groupId>-->
+        <!--            <artifactId>spire.doc.free</artifactId>-->
+        <!--            <version>5.2.0</version>-->
+        <!--        </dependency>-->
+
+        <!-- 四性检测 -->
+        <dependency>
+            <groupId>cn.amberdata</groupId>
+            <artifactId>validator-client</artifactId>
+            <version>validator-2.2.11</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>metadata-facade</artifactId>
+                    <groupId>cn.amberdata</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>cn.amberdata.common</groupId>
+                    <artifactId>content-transfer</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>e-iceblue</groupId>
+                    <artifactId>spire.pdf</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-validator</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>okhttp</artifactId>
+                    <groupId>com.squareup.okhttp3</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.alipay.sofa</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>dubbo</artifactId>
+                    <groupId>org.apache.dubbo</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--格式转换-->
+        <dependency>
+            <artifactId>format-facade</artifactId>
+            <groupId>cn.amberdata.format</groupId>
+            <version>2.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.amberdata</groupId>
+            <artifactId>search-facade</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.amberdata</groupId>
+            <artifactId>metadata-facade</artifactId>
+            <version>3.0.102</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.amberdata</groupId>
+            <artifactId>flow-facade</artifactId>
+            <version>2.0.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.amberdata</groupId>
+            <artifactId>dataarchives-facade</artifactId>
+            <version>dubbo-1.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.amberdata.ltrps</groupId>
+            <artifactId>ltrps-facade</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml</groupId>
+            <artifactId>jaxp-api</artifactId>
+            <version>1.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.sevenzipjbinding</groupId>
+            <artifactId>sevenzipjbinding</artifactId>
+            <version>16.02-2.01</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.sevenzipjbinding</groupId>
+            <artifactId>sevenzipjbinding-all-platforms</artifactId>
+            <version>16.02-2.01</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>24.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- tdr-facade包引入开始 -->
+        <dependency>
+            <groupId>cn.amberdata</groupId>
+            <artifactId>tdr-facade</artifactId>
+            <version>1.8.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -223,111 +412,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <dependency>
-            <groupId>cn.amberdata.common</groupId>
-            <artifactId>cache</artifactId>
-            <version>1.1.11</version>
-        </dependency>
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.amberdata</groupId>
-            <artifactId>metadata-facade</artifactId>
-            <version>2.2.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.amberdata.common</groupId>
-            <artifactId>content-transfer</artifactId>
-            <version>1.0.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.amberdata</groupId>
-            <artifactId>rm-core</artifactId>
-            <version>2.0.23-afcupgrade</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>cn.amberdata</groupId>
-                    <artifactId>admin-facade</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>cn.amberdata</groupId>
-                    <artifactId>search-facade</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>cn.amberdata</groupId>
-            <artifactId>erms-facade</artifactId>
-            <version>3.1.16-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.amberdata</groupId>
-            <artifactId>search-facade</artifactId>
-            <version>3.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.amberdata</groupId>
-            <artifactId>dataarchives-facade</artifactId>
-            <version>dubbo-1.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.amberdata</groupId>
-            <artifactId>flow-facade</artifactId>
-            <version>1.0.17</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.amberdata.triple</groupId>
-            <artifactId>triple-facade</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.amberdata.transferreceiving</groupId>
-            <artifactId>transfer-facade</artifactId>
-            <version>xiaoshan-dubbo</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.amberdata.sgportal</groupId>
-            <artifactId>sgportal-facade</artifactId>
-            <version>2.0.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>dingtalk</artifactId>
-            <version>1.4.91</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>31.1-jre</version>
-        </dependency>
-
-        <dependency>
-            <groupId>jcifs</groupId>
-            <artifactId>jcifs</artifactId>
-            <version>1.3.17</version>
-        </dependency>
-
-        <!--台州对接oawebservice接口cxf依赖-->
+        <!--        &lt;!&ndash;台州对接oawebservice接口cxf依赖&ndash;&gt;-->
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
@@ -344,15 +429,21 @@
             <version>3.3.7</version>
         </dependency>
 
+
         <dependency>
-            <groupId>javax.media</groupId>
-            <artifactId>jai_core</artifactId>
-            <version>1.1.3</version>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>${aliyun.oss.version}</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <!--添加打包配置 start-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
             <!--添加打包配置 end-->
             <!--            <plugin>-->
             <!--                <groupId>org.apache.maven.plugins</groupId>-->
@@ -413,11 +504,14 @@
                         </include>
                     </includes>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>none</phase>
-                    </execution>
-                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
