@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: cn.amberdata:rm-core:2.0.23-afcupgrade">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/rm-core/2.0.23-afcupgrade/rm-core-2.0.23-afcupgrade.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/rm-core/2.0.23-afcupgrade/rm-core-2.0.23-afcupgrade-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/rm-core/2.0.23-afcupgrade/rm-core-2.0.23-afcupgrade-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

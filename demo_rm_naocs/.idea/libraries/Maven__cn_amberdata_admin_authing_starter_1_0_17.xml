@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: cn.amberdata:admin-authing-starter:1.0.17">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/admin-authing-starter/1.0.17/admin-authing-starter-1.0.17.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/admin-authing-starter/1.0.17/admin-authing-starter-1.0.17-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/admin-authing-starter/1.0.17/admin-authing-starter-1.0.17-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

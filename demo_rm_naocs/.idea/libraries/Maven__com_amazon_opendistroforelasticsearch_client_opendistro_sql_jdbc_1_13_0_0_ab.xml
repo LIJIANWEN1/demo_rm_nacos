@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.amazon.opendistroforelasticsearch.client:opendistro-sql-jdbc:1.13.0.0-ab">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/com/amazon/opendistroforelasticsearch/client/opendistro-sql-jdbc/1.13.0.0-ab/opendistro-sql-jdbc-1.13.0.0-ab.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/com/amazon/opendistroforelasticsearch/client/opendistro-sql-jdbc/1.13.0.0-ab/opendistro-sql-jdbc-1.13.0.0-ab-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/com/amazon/opendistroforelasticsearch/client/opendistro-sql-jdbc/1.13.0.0-ab/opendistro-sql-jdbc-1.13.0.0-ab-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

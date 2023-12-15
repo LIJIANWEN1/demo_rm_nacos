@@ -26,6 +26,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         "com.example.demo1_nacos.service",
         "com.example.demo1_nacos.collector",
         "com.example.demo1_nacos.dbconfig"})
+@MapperScan(basePackages = {"cn.amberdata.rm.**.mapper"},
+        sqlSessionTemplateRef = "elasticSqlSessionTemplate", sqlSessionFactoryRef = "elasticSqlSessionFactory")
 //@MapperScan()
 
 //@EnableDiscoveryClient

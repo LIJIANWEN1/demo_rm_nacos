@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.aspose:aspose-imaging:jdk16:18.9">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/com/aspose/aspose-imaging/18.9/aspose-imaging-18.9-jdk16.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/com/aspose/aspose-imaging/18.9/aspose-imaging-18.9-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/com/aspose/aspose-imaging/18.9/aspose-imaging-18.9-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

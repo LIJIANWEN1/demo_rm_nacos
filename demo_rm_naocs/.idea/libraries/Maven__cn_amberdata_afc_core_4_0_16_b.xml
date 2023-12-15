@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: cn.amberdata.afc:core:4.0.16-b">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/afc/core/4.0.16-b/core-4.0.16-b.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/afc/core/4.0.16-b/core-4.0.16-b-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/afc/core/4.0.16-b/core-4.0.16-b-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

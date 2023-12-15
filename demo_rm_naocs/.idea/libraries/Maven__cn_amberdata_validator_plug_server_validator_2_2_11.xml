@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: cn.amberdata:validator-plug-server:validator-2.2.11">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/validator-plug-server/validator-2.2.11/validator-plug-server-validator-2.2.11.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/validator-plug-server/validator-2.2.11/validator-plug-server-validator-2.2.11-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/validator-plug-server/validator-2.2.11/validator-plug-server-validator-2.2.11-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

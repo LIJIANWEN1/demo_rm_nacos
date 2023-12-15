@@ -7,10 +7,15 @@ import cn.amberdata.dm.common.context.session.SessionContext;
 import cn.amberdata.dm.common.context.unit.UnitContext;
 import cn.amberdata.dm.common.domain.event.DomainEventPublisher;
 import cn.amberdata.dm.common.log.LogUtil;
+import cn.amberdata.dm.common.permit.FolderPermitHandler;
 import cn.amberdata.dm.folder.Folder;
 import cn.amberdata.dm.folder.FolderRepository;
 import cn.amberdata.dm.organization.department.DepartmentCommand;
 import cn.amberdata.dm.organization.department.DepartmentService;
+import cn.amberdata.dm.organization.role.Role;
+import cn.amberdata.dm.organization.role.RoleRepository;
+import cn.amberdata.dm.organization.role.map.DefaultRoleHolder;
+import cn.amberdata.dm.organization.role.map.RoleClass;
 import cn.amberdata.dm.organization.unit.Unit;
 import cn.amberdata.dm.organization.unit.UnitDO;
 import cn.amberdata.dm.organization.unit.UnitRepository;
@@ -28,6 +33,7 @@ import cn.amberdata.rm.archive.record.mapper.RecordMapper;
 import cn.amberdata.rm.archive.volume.mapper.VolumeMapper;
 import cn.amberdata.rm.classification.*;
 import cn.amberdata.rm.classification.mapper.SubCategoryMapper;
+import cn.amberdata.rm.common.domain.UnitFolderConstants;
 import cn.amberdata.rm.common.exception.ExceptionCode;
 import cn.amberdata.rm.metadata.category.MetadataCategory;
 import cn.amberdata.rm.metadata.category.MetadataCategoryRepository;
@@ -53,14 +59,12 @@ import com.example.demo1_nacos.service.specification.ClassNumberSpecification;
 import com.example.demo1_nacos.service.specification.ClassWhetherOperatedSpecification;
 import com.example.demo1_nacos.service.specification.SubCategoryCreateSpecification;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -428,6 +432,154 @@ public class RmOtherServiceImpl {
 
     @Resource
     private UnitRepository unitRepository;
+
+    @Resource
+    private RoleRepository roleRepository;
+
+
+    public void initUnitRole(String unitId){
+        for (RoleClass roleClass : DefaultRoleHolder.ROLE_CLASSES) {
+            try {
+                Role byCode = roleRepository.findByDisplayNameInUnit(unitId, roleClass.getRoleName());
+                if (byCode == null) {
+                    Role role = roleRepository.newEntity(UUID.randomUUID().toString(), roleClass.getRoleName(), roleClass.getRoleCode(), unitId);
+                    roleRepository.store(role);
+                }
+            } catch (Exception e) {
+                cn.amberdata.rm.common.log.LogUtil.error(e.getMessage());
+            }
+        }
+    }
+
+    public void createUnitFolder(Unit unit, FolderPermitHandler folderPermitHandler) {
+        String unitPath = "/" + unit.getDisplayName() + "-" + unit.getCode();
+        //创建RM文件夹
+        String rmPath = createFolderAndGrant(UnitFolderConstants.TOP_RM_FOLDER_PATH, unitPath, folderPermitHandler);
+        //创建档案库文件夹
+        createFolderAndGrant(UnitFolderConstants.ARCHIVES_LIBRARY, rmPath, folderPermitHandler);
+        //创建库房文件夹
+        createFolderAndGrant(UnitFolderConstants.WAREHOUSE, rmPath, folderPermitHandler);
+        //创建村级档案文件夹
+        createFolderAndGrant(UnitFolderConstants.VILLAGE_ARCHIVE_FOLDER, rmPath, folderPermitHandler);
+        //创建专题库文件夹
+        String subjectPath = createFolderAndGrant(UnitFolderConstants.SUBJECT, rmPath, folderPermitHandler);
+        //创建编研主题文件夹
+        String editResearchSubjectPath = createFolderAndGrant(UnitFolderConstants.EDIT_RESEARCH_SUBJECT, rmPath, folderPermitHandler);
+        //创建专题成果库文件夹
+        String saPath = createFolderAndGrant(UnitFolderConstants.SUBJECT_ACHIEVEMENTS, rmPath, folderPermitHandler);
+        //创建文档编研成果库文件夹
+        createFolderAndGrant(UnitFolderConstants.FILE_ACHIEVEMENTS, saPath, folderPermitHandler);
+        //创建照片编研成果库文件夹
+        createFolderAndGrant(UnitFolderConstants.PHOTO_ACHIEVEMENTS, saPath, folderPermitHandler);
+        //单位/RM.档案管理/利用库
+        String usingFolderPath = createFolderAndGrant(UnitFolderConstants.UNIT_USING_FOLDER, rmPath, folderPermitHandler);
+        //单位/RM.档案管理/利用库/同步库
+        createFolderAndGrant(UnitFolderConstants.SYNC_LIB_FOLDER, usingFolderPath, folderPermitHandler);
+        // /单位/RM.档案管理/全宗卷
+        String folderPath = createFolderAndGrant(UnitFolderConstants.FOND_VOLUME_FOLDER, rmPath, folderPermitHandler);
+        createFondVolumeFolder1(folderPath, folderPermitHandler);
+        // /单位/RM.档案管理/销毁库
+        String destructionHouseFolderPath = createFolderAndGrant(UnitFolderConstants.DESTRUCTION_FOLDER, rmPath, folderPermitHandler);
+        //创建销毁清单
+        createFolderAndGrant(UnitFolderConstants.DESTRUCTION_LIST, destructionHouseFolderPath, folderPermitHandler);
+        //创建整编库文件夹
+        String reorganisationLibraryPath = createFolderAndGrant(UnitFolderConstants.REORGANIZATION_LIBRARY, rmPath, folderPermitHandler);
+        //创建业务系统收集文件夹
+        createFolderAndGrant(UnitFolderConstants.UNIT_BUSINESS_COLLECTION_FOLDER, reorganisationLibraryPath, folderPermitHandler);
+        //创建文件线上收集文件夹
+        String receiveFolder = createFolderAndGrant(UnitFolderConstants.UNIT_RECEIVE_FOLDER, reorganisationLibraryPath, folderPermitHandler);
+        //创建线上单位文件夹，因为浙政钉同步的用户没有部门，所以创建该文件夹做提交归档
+        createFolderAndGrant(unit.getDisplayName() + "-" + unit.getCode(), receiveFolder, folderPermitHandler);
+        //创建外部信息收集文件夹
+        String externalFolder = createFolderAndGrant(UnitFolderConstants.UNIT_EXTERNAL_COLLECTION_FOLDER, reorganisationLibraryPath, folderPermitHandler);
+        //创建浙政钉文件夹
+        createFolderAndGrant(UnitFolderConstants.UNIT_EXTERNAL_COLLECTION_ZZD_FOLDER, externalFolder, folderPermitHandler);
+        //创建文件线下收集文件夹
+        createFolderAndGrant(UnitFolderConstants.UNIT_ARRANGE_FOLDER, reorganisationLibraryPath, folderPermitHandler);
+        //创建表单文件夹
+        String formFolderPath = createFolderAndGrant(UnitFolderConstants.FORM_FOLDER, rmPath, folderPermitHandler);
+        //创建借阅单文件夹
+        createFolderAndGrant(UnitFolderConstants.BORROW_FORM_FOLDER, formFolderPath, folderPermitHandler);
+        //创建销毁批次文件夹
+        createFolderAndGrant(UnitFolderConstants.DESTRUCTION_BATCH_FOLDER, formFolderPath, folderPermitHandler);
+        //创建查档登记文件夹
+        createFolderAndGrant(UnitFolderConstants.FILING_REGISTRATION, formFolderPath, folderPermitHandler);
+        //创建鉴定任务文件夹
+        createFolderAndGrant(UnitFolderConstants.APPRAISAL, formFolderPath, folderPermitHandler);
+        // /单位/RM.档案管理/表单/续存表单
+        createFolderAndGrant(UnitFolderConstants.RECEIVE_DEPOSIT_FORM_FOLDER, formFolderPath, folderPermitHandler);
+        //创建业务表单文件夹
+        String buPath = createFolderAndGrant(UnitFolderConstants.BUSINESS_FORM, formFolderPath, folderPermitHandler);
+        //创建移交记录文件夹
+        createFolderAndGrant(UnitFolderConstants.TRANSFER_RECORD_FOLDER, buPath, folderPermitHandler);
+        //创建台账管理文件夹
+        createFolderAndGrant(UnitFolderConstants.LEDGER_MANAGEMENT, buPath, folderPermitHandler);
+        // 创建掌查文档
+        createFolderAndGrant(UnitFolderConstants.PLAM_INSPECTION_DOCUMENT_FOLDER, unitPath, folderPermitHandler);
+        //创建配置信息文件夹
+        String settingsPath = createFolderAndGrant(UnitFolderConstants.TOP_SETTINGS_FOLDER_PATH, unitPath, folderPermitHandler);
+        //创建协助查档人员配置文件夹
+        createFolderAndGrant(UnitFolderConstants.QUERY_ARCHIVIST, settingsPath, folderPermitHandler);
+        //创建栏目配置文件夹
+        createFolderAndGrant(UnitFolderConstants.CHANNEL_FOLDER, settingsPath, folderPermitHandler);
+        //创建保留处置策略文件夹
+        createFolderAndGrant(UnitFolderConstants.RETENTION_POLICY, settingsPath, folderPermitHandler);
+        //创建接口人配置文件夹
+        createFolderAndGrant(UnitFolderConstants.CONTACT_PERSON, settingsPath, folderPermitHandler);
+        //创建应用配置文件夹
+        createFolderAndGrant(UnitFolderConstants.APP_SETTING, settingsPath, folderPermitHandler);
+        //创建挂接原文匹配字段
+        createFolderAndGrant(UnitFolderConstants.MATCH_FIELD, settingsPath, folderPermitHandler);
+        //创建数据拉取策略配置文件夹
+        createFolderAndGrant(UnitFolderConstants.PULL_DATA_CONFIG, settingsPath, folderPermitHandler);
+        //创建登记备份文件夹
+        createFolderAndGrant(UnitFolderConstants.REGISTER_BACKUP, rmPath, folderPermitHandler);
+
+    }
+
+    /**
+     * 初始化全宗卷九大类文件夹
+     *
+     * @param parentPath 全宗卷文件夹路径
+     */
+    private void createFondVolumeFolder1(String parentPath, FolderPermitHandler folderPermitHandler) {
+        createFolderAndGrant(UnitFolderConstants.FOND_VOLUME_MANAGER, parentPath, folderPermitHandler);
+        createFolderAndGrant(UnitFolderConstants.ARCHIVE_USE, parentPath, folderPermitHandler);
+        createFolderAndGrant(UnitFolderConstants.ARCHIVE_STATISTICS, parentPath, folderPermitHandler);
+        createFolderAndGrant(UnitFolderConstants.ARCHIVE_STORAGE, parentPath, folderPermitHandler);
+        createFolderAndGrant(UnitFolderConstants.ARCHIVE_APPRAISAL, parentPath, folderPermitHandler);
+        createFolderAndGrant(UnitFolderConstants.ARCHIVING, parentPath, folderPermitHandler);
+        createFolderAndGrant(UnitFolderConstants.ARCHIVE_COLLECTION, parentPath, folderPermitHandler);
+        createFolderAndGrant(UnitFolderConstants.TECHNOLOGY_APPLICATION, parentPath, folderPermitHandler);
+        createFolderAndGrant(UnitFolderConstants.OTHER, parentPath, folderPermitHandler);
+    }
+
+    /**
+     * 创建文件夹
+     *
+     * @param name       名称
+     * @param parentPath 父路径
+     * @return 创建出来的文件夹路径
+     */
+    private String createFolderAndGrant(String name, String parentPath, FolderPermitHandler folderPermitHandler) {
+        //TODO admin消息改动可能会影响报错 暂时捕获
+        try {
+            Folder folder = folderRepository.findByPath(parentPath + "/" + name);
+            if (folder == null) {
+                folder = new Folder(new ObjectName(name));
+                if (StringUtils.isNotBlank(parentPath)) {
+                    folder.link(parentPath);
+                }
+                folderRepository.store(folder);
+            }
+            folderPermitHandler.applyPermit(folder);
+            cn.amberdata.rm.common.log.LogUtil.info("初始化单位文件夹权限 文件夹路径{}" + folder.getObjectPath());
+            return folder.getObjectPath();
+        } catch (Exception e) {
+            cn.amberdata.rm.common.log.LogUtil.error(e.getMessage());
+        }
+        return null;
+    }
 
     public void initSyncLibFolder(Boolean flag,String unitId) {
         SessionContext.setSession(SessionUtil.getAdminSession());

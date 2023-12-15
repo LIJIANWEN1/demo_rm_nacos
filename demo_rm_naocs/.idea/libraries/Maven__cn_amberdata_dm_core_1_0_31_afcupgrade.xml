@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: cn.amberdata:dm-core:1.0.31-afcupgrade">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/dm-core/1.0.31-afcupgrade/dm-core-1.0.31-afcupgrade.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/dm-core/1.0.31-afcupgrade/dm-core-1.0.31-afcupgrade-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/dm-core/1.0.31-afcupgrade/dm-core-1.0.31-afcupgrade-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

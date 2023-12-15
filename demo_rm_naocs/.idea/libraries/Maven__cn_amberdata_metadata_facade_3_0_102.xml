@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: cn.amberdata:metadata-facade:3.0.102">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/metadata-facade/3.0.102/metadata-facade-3.0.102.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/metadata-facade/3.0.102/metadata-facade-3.0.102-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../maven-repository/cn/amberdata/metadata-facade/3.0.102/metadata-facade-3.0.102-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
