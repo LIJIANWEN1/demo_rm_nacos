@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 /**
  * @author zhangLei
@@ -30,6 +31,7 @@ public class ZzdController {
     public boolean zzd() {
         System.out.println("xxxxxxxx");
         zzdService.getOrgDetail("GO_20d5215098b849f5a4c8660e5ac55a02","196729");
+//        zzdService.pageGetSubOrgCodes("196729","GO_20d5215098b849f5a4c8660e5ac55a02",new ArrayList<>(),50);
         return true;
     }
 

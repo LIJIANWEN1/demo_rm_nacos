@@ -6,13 +6,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.xxpt.gateway.shared.api.request.OapiMoziOrganizationGetOrganizationByCodeRequest;
 import com.alibaba.xxpt.gateway.shared.api.request
         .OapiMoziOrganizationPageOrganizationEmployeeCodesRequest;
+import com.alibaba.xxpt.gateway.shared.api.request.OapiMoziOrganizationPageSubOrganizationCodesRequest;
 import com.alibaba.xxpt.gateway.shared.api.response.OapiMoziOrganizationGetOrganizationByCodeResponse;
 import com.alibaba.xxpt.gateway.shared.api.response.OapiMoziOrganizationPageOrganizationEmployeeCodesResponse;
+import com.alibaba.xxpt.gateway.shared.api.response.OapiMoziOrganizationPageSubOrganizationCodesResponse;
 import com.alibaba.xxpt.gateway.shared.client.http.ExecutableClient;
 import com.alibaba.xxpt.gateway.shared.client.http.IntelligentPostClient;
 import com.alibaba.xxpt.gateway.shared.client.http.api.OapiSpResultContent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author zhangLei
@@ -29,6 +33,7 @@ public class ZzdServiceImpl {
     public static final String OK_STATUS = "A";
     private static final String ORG_DETAIL_BY_CODE = "/mozi/organization/getOrganizationByCode";
     private static final String PAGE_EMPLOYEE_CODES = "/mozi/organization/pageOrganizationEmployeeCodes";
+    private static final String PAGE_SUB_ORG_CODES = "/mozi/organization/pageSubOrganizationCodes";
 
     public static ExecutableClient executableClient() {
         ExecutableClient executableClient = ExecutableClient.getInstance();
@@ -59,6 +64,38 @@ public class ZzdServiceImpl {
         log.info("浙政钉根据组织code获取详情失败  err_msg：" + codeResponse.getMessage());
         log.info("浙政钉根据组织code获取详情失败  err_code：" + codeResponse.getBizErrorCode());
         return null;
+    }
+
+    public void pageGetSubOrgCodes(String admin_tenantid,String parentCode, List<String> subCodes, int pageNo) {
+        ExecutableClient zzdSyncConfig = executableClient();
+        OapiMoziOrganizationPageSubOrganizationCodesRequest request = new OapiMoziOrganizationPageSubOrganizationCodesRequest();
+        request.setTenantId(Long.valueOf(admin_tenantid));
+        request.setOrganizationCode(parentCode);
+        request.setPageSize(PAGE_SIZE);
+        request.setReturnTotalSize(true);
+        request.setPageNo(pageNo);
+        IntelligentPostClient intelligentPostClient = zzdSyncConfig.newIntelligentPostClient(PAGE_SUB_ORG_CODES);
+        OapiMoziOrganizationPageSubOrganizationCodesResponse reponse = intelligentPostClient.post(request);
+        if (reponse.getSuccess()) {
+            OapiSpResultContent content = reponse.getContent();
+            if (content.getSuccess()) {
+                String data = content.getData();
+                log.info("浙政钉分页获取子组织 parentCode：{}, data: {}" , parentCode, data);
+                Long currentPage = content.getCurrentPage();
+                if (null != data && !"null".equals(data)) {
+                    List<String> list = JSON.parseArray(data, String.class);
+                    log.info("浙政钉分页获取子组织该页数量：" + list.size());
+                    subCodes.addAll(list);
+                    //如果是一整页，可能会有下一页，不满一页没有下一页
+//                    if (list.size() == PAGE_SIZE) {
+//                        pageGetSubOrgCodes(parentCode, subCodes, Integer.parseInt(currentPage.toString()) + 1);
+//                    }
+                }
+            } else {
+                throw new RuntimeException(content.getResponseMessage());
+            }
+
+        }
     }
 
     public  boolean orgHaveUsers( String code, String admin_tenantid) {
