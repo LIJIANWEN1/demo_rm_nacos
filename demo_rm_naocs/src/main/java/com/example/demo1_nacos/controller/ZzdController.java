@@ -27,7 +27,7 @@ public class ZzdController {
     private ZzdServiceImpl zzdService;
 
     @GetMapping("/ss")
-    @Scheduled(cron = "0 0/1 * * * ?")
+//    @Scheduled(cron = "0 0/1 * * * ?")
     public boolean zzd() {
         System.out.println("xxxxxxxx");
         zzdService.getOrgDetail("GO_20d5215098b849f5a4c8660e5ac55a02","196729");

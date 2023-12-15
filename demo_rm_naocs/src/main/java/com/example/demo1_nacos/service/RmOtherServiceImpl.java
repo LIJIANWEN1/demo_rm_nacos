@@ -1,6 +1,7 @@
 package com.example.demo1_nacos.service;
 import cn.amberdata.afc.api.object.IAfPersistentObject;
 import cn.amberdata.afc.api.object.IAfSysObject;
+import cn.amberdata.afc.api.operation.AfBulk;
 import cn.amberdata.afc.common.util.AfSessionUtils;
 import cn.amberdata.common.util.exception.BusinessException;
 import cn.amberdata.dm.common.context.session.SessionContext;
@@ -10,7 +11,12 @@ import cn.amberdata.dm.folder.Folder;
 import cn.amberdata.dm.folder.FolderRepository;
 import cn.amberdata.dm.organization.department.DepartmentCommand;
 import cn.amberdata.dm.organization.department.DepartmentService;
+import cn.amberdata.dm.organization.unit.Unit;
+import cn.amberdata.dm.organization.unit.UnitDO;
+import cn.amberdata.dm.organization.unit.UnitRepository;
+import cn.amberdata.dm.organization.unit.mapper.UnitMapper;
 import cn.amberdata.dm.session.SessionUtil;
+import cn.amberdata.dm.sysobject.ObjectName;
 import cn.amberdata.dm.sysobject.SysObjectDO;
 import cn.amberdata.dm.sysobject.SysObjectRepository;
 import cn.amberdata.dm.sysobject.SysObjectService;
@@ -23,6 +29,7 @@ import cn.amberdata.rm.archive.volume.mapper.VolumeMapper;
 import cn.amberdata.rm.classification.*;
 import cn.amberdata.rm.classification.mapper.SubCategoryMapper;
 import cn.amberdata.rm.common.exception.ExceptionCode;
+import cn.amberdata.rm.common.log.LogUtil;
 import cn.amberdata.rm.metadata.category.MetadataCategory;
 import cn.amberdata.rm.metadata.category.MetadataCategoryRepository;
 import cn.amberdata.rm.metadata.info.MetadataSchemeInfo;
@@ -49,8 +56,12 @@ import com.example.demo1_nacos.service.specification.CategoryCreateSpecification
 import com.example.demo1_nacos.service.specification.ClassNumberSpecification;
 import com.example.demo1_nacos.service.specification.ClassWhetherOperatedSpecification;
 import com.example.demo1_nacos.service.specification.SubCategoryCreateSpecification;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.annotation.Resource;
 import java.util.Collections;
@@ -70,6 +81,9 @@ public class RmOtherServiceImpl {
 
     @Resource
     private FolderRepository folderRepository;
+
+    @Resource
+    private UnitMapper unitMapper;
 
     @Resource
     private PhysicalArchiveItemRepository physicalArchiveItemRepository;
@@ -143,6 +157,56 @@ public class RmOtherServiceImpl {
 //        return subCategory.getObjectId().getId();
         return "";
     }
+
+    @Autowired
+    private UnitRepository unitRepository;
+
+    public void initSyncLibFolder(Boolean flag,String unitId) {
+        SessionContext.setSession(SessionUtil.getAdminSession());
+        if(flag){
+                //默认取100
+                List<UnitDO> unitDoS = unitMapper.list(new Page<>(1, 2000));
+                if (CollectionUtils.isEmpty(unitDoS)) {
+                    return;
+                }
+                for (UnitDO unitDo : unitDoS) {
+                    try {
+                        Unit unit = unitRepository.find(unitDo.getId());
+                        LogUtil.info("开始创建单位文件柜...");
+                        Folder folder = folderRepository.findByPath( "/" + unit.getDisplayName() + "-" + unit.getCode());
+                        if (folder == null) {
+                            // 创建单位的文件柜
+                            folder = new Folder(new ObjectName(unit.getDisplayName() + "-" + unit.getCode()));
+                            folderRepository.store(folder);
+                            LogUtil.info("创建成功...");
+                        }else {
+                            LogUtil.info("无需创建");
+                        }
+                    } catch (Exception e) {
+                        LogUtil.error("单个单位初始化同步库失败", e);
+                    }
+                }
+        }else{
+            try {
+                Unit unit = unitRepository.find(unitId);
+                LogUtil.info("开始创建单位文件柜...");
+                Folder folder = folderRepository.findByPath( "/" + unit.getDisplayName() + "-" + unit.getCode());
+                if (folder == null) {
+                    // 创建单位的文件柜
+                    folder = new Folder(new ObjectName(unit.getDisplayName() + "-" + unit.getCode()));
+                    folderRepository.store(folder);
+                    LogUtil.info("创建成功...");
+                }else {
+                    LogUtil.info("无需创建");
+                }
+            } catch (Exception e) {
+                LogUtil.error("单个单位初始化同步库失败", e);
+            }
+        }
+
+    }
+
+
 
     public String createRetentionStrategy(String unitId,String policyPath){
         String retentionStrategyId = "";

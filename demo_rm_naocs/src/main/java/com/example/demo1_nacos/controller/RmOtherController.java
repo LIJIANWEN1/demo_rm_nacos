@@ -1,12 +1,21 @@
 package com.example.demo1_nacos.controller;
+import cn.amberdata.dm.common.context.session.SessionContext;
+import cn.amberdata.dm.folder.Folder;
+import cn.amberdata.dm.organization.unit.Unit;
+import cn.amberdata.dm.organization.unit.UnitDO;
+import cn.amberdata.dm.session.SessionUtil;
+import cn.amberdata.dm.sysobject.ObjectName;
 import cn.amberdata.rm.classification.mapper.SubCategoryMapper;
+import cn.amberdata.rm.common.log.LogUtil;
 import cn.amberdata.rm.metadata.itemcode.MetadataCodeItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo1_nacos.service.RmArchiveServiceImpl;
 import com.example.demo1_nacos.service.RmOtherServiceImpl;
 import com.example.demo1_nacos.service.command.CategoryCreateCommand;
 import com.example.demo1_nacos.service.command.SubCategoryCreateCommand;
 import com.example.demo1_nacos.vo.ImportArchivePackageVO;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -102,6 +111,14 @@ public class RmOtherController {
     @GetMapping("/delete_phy")
     void syncPlatformData(String id){
         rmOtherService.destroyPhysicalArchiveItem(id);
+    }
+
+
+    @ApiOperation(value = "创建单位文件柜")
+    @GetMapping("/init_unit_foler")
+    public void initSyncLibFolder(Boolean flag,String unitId) {
+        rmOtherService.initSyncLibFolder(flag,unitId);
+
     }
 
 
