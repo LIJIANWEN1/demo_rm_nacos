@@ -6,11 +6,17 @@ import cn.amberdata.common.util.exception.BusinessException;
 import cn.amberdata.dm.common.context.session.SessionContext;
 import cn.amberdata.dm.common.context.unit.UnitContext;
 import cn.amberdata.dm.common.domain.event.DomainEventPublisher;
+import cn.amberdata.dm.common.log.LogUtil;
 import cn.amberdata.dm.folder.Folder;
 import cn.amberdata.dm.folder.FolderRepository;
 import cn.amberdata.dm.organization.department.DepartmentCommand;
 import cn.amberdata.dm.organization.department.DepartmentService;
+import cn.amberdata.dm.organization.unit.Unit;
+import cn.amberdata.dm.organization.unit.UnitDO;
+import cn.amberdata.dm.organization.unit.UnitRepository;
+import cn.amberdata.dm.organization.unit.mapper.UnitMapper;
 import cn.amberdata.dm.session.SessionUtil;
+import cn.amberdata.dm.sysobject.ObjectName;
 import cn.amberdata.dm.sysobject.SysObjectDO;
 import cn.amberdata.dm.sysobject.SysObjectRepository;
 import cn.amberdata.dm.sysobject.SysObjectService;
@@ -47,6 +53,7 @@ import com.example.demo1_nacos.service.specification.ClassNumberSpecification;
 import com.example.demo1_nacos.service.specification.ClassWhetherOperatedSpecification;
 import com.example.demo1_nacos.service.specification.SubCategoryCreateSpecification;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -64,6 +71,9 @@ import java.util.concurrent.Executors;
  */
 @Service
 public class RmOtherServiceImpl {
+
+    @Resource
+    private UnitMapper unitMapper;
 
     @Resource
     private FolderRepository folderRepository;
@@ -415,6 +425,55 @@ public class RmOtherServiceImpl {
         command.setRetentionPolicyId("bf14053038209662976");
         create(command);
     }
+
+    @Resource
+    private UnitRepository unitRepository;
+
+    public void initSyncLibFolder(Boolean flag,String unitId) {
+        SessionContext.setSession(SessionUtil.getAdminSession());
+        if(flag){
+            //默认取100
+            List<UnitDO> unitDoS = unitMapper.list(new Page<>(1, 2000));
+            if (CollectionUtils.isEmpty(unitDoS)) {
+                return;
+            }
+            for (UnitDO unitDo : unitDoS) {
+                try {
+                    Unit unit = unitRepository.find(unitDo.getId());
+                    LogUtil.info("开始创建单位文件柜...");
+                    Folder folder = folderRepository.findByPath( "/" + unit.getDisplayName() + "-" + unit.getCode());
+                    if (folder == null) {
+                        // 创建单位的文件柜
+                        folder = new Folder(new ObjectName(unit.getDisplayName() + "-" + unit.getCode()));
+                        folderRepository.store(folder);
+                        LogUtil.info("创建成功...");
+                    }else {
+                        LogUtil.info("无需创建");
+                    }
+                } catch (Exception e) {
+                    LogUtil.error("单个单位初始化同步库失败", e);
+                }
+            }
+        }else{
+            try {
+                Unit unit = unitRepository.find(unitId);
+                LogUtil.info("开始创建单位文件柜...");
+                Folder folder = folderRepository.findByPath( "/" + unit.getDisplayName() + "-" + unit.getCode());
+                if (folder == null) {
+                    // 创建单位的文件柜
+                    folder = new Folder(new ObjectName(unit.getDisplayName() + "-" + unit.getCode()));
+                    folderRepository.store(folder);
+                    LogUtil.info("创建成功...");
+                }else {
+                    LogUtil.info("无需创建");
+                }
+            } catch (Exception e) {
+                LogUtil.error("单个单位初始化同步库失败", e);
+            }
+        }
+
+    }
+
 
 
 

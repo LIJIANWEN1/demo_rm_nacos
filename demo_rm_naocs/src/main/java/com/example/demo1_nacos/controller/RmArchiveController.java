@@ -16,23 +16,23 @@ public class RmArchiveController {
     @Resource
     private RmArchiveServiceImpl rmArchiveService;
 
-    @GetMapping("/update_archival_id")
-    public String updateArchvivalId(@RequestParam String path) throws Exception {
-        rmArchiveService.updateArchivalId(path);
-        return "resultStr";
-    }
+//    @GetMapping("/update_archival_id")
+//    public String updateArchvivalId(@RequestParam String path) throws Exception {
+//        rmArchiveService.updateArchivalId(path);
+//        return "resultStr";
+//    }
 
 
-    @PostMapping("/import_archives")
-    public String createRecord(@RequestBody ImportArchivePackageVO importArchivePackageVO) {
-        if (importArchivePackageVO.getType().equals(ImportArchivePackageVO.RECORD) &&
-                (importArchivePackageVO.getCollectionWay().equals(ImportArchivePackageVO.VOLUME)||
-                importArchivePackageVO.getCollectionWay().equals(ImportArchivePackageVO.RECORD))){
-            rmArchiveService.importRecordFromExcel(importArchivePackageVO.getMetadataSchemeId(),importArchivePackageVO.getCollectionWay(),importArchivePackageVO);
-        }else {
-            rmArchiveService.importVolumeFromExcel(importArchivePackageVO.getMetadataSchemeId(), importArchivePackageVO.getCollectionWay(), importArchivePackageVO);
-        }
-        return "666";
-    }
+//    @PostMapping("/import_archives")
+//    public String createRecord(@RequestBody ImportArchivePackageVO importArchivePackageVO) {
+////        if (importArchivePackageVO.getType().equals(ImportArchivePackageVO.RECORD) &&
+////                (importArchivePackageVO.getCollectionWay().equals(ImportArchivePackageVO.VOLUME)||
+////                importArchivePackageVO.getCollectionWay().equals(ImportArchivePackageVO.RECORD))){
+////            rmArchiveService.importRecordFromExcel(importArchivePackageVO.getMetadataSchemeId(),importArchivePackageVO.getCollectionWay(),importArchivePackageVO);
+////        }else {
+////            rmArchiveService.importVolumeFromExcel(importArchivePackageVO.getMetadataSchemeId(), importArchivePackageVO.getCollectionWay(), importArchivePackageVO);
+////        }
+////        return "666";
+//    }
 
 }

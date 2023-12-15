@@ -6,7 +6,7 @@ spring:
   application:
     name: demo
   profiles:
-    active: 6.0
+    active: 6.0-xx
   thymeleaf:
     prefix: classpath:/static/
     suffix: .html

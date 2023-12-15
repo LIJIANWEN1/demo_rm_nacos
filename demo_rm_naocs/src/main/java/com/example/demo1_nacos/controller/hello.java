@@ -4,7 +4,6 @@ import cn.amberdata.common.util.excel.ExcelUtilEx;
 import cn.amberdata.common.util.excel.old.ExcelUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.example.demo1_nacos.antivirus.CommandException;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -26,32 +25,32 @@ public class hello {
 //    @Value("${aaa}")
     private String  addr;
 
-    @PostMapping("/nifi_commit")
-    public String nifiCommit(@RequestBody String rb) throws CommandException, InterruptedException, IOException {
-        System.out.println(rb);
-//            List<String> command = new ArrayList<>();
-//            command.add("/bin/bash -c export LD_LIBRARY_PATH=/amberdata/sd/new-clamav/aa/usr/lib");
-//            command.add("/bin/bash -c echo $LD_LIBRARY_PATH");
-//            command.add("echo 'xxxxx'");
-//            String commandOutput = CommandUtility.execute(command, true);
-//            System.out.println(commandOutput);
-        return "Hello World!";
-    }
+//    @PostMapping("/nifi_commit")
+//    public String nifiCommit(@RequestBody String rb) throws CommandException, InterruptedException, IOException {
+//        System.out.println(rb);
+////            List<String> command = new ArrayList<>();
+////            command.add("/bin/bash -c export LD_LIBRARY_PATH=/amberdata/sd/new-clamav/aa/usr/lib");
+////            command.add("/bin/bash -c echo $LD_LIBRARY_PATH");
+////            command.add("echo 'xxxxx'");
+////            String commandOutput = CommandUtility.execute(command, true);
+////            System.out.println(commandOutput);
+//        return "Hello World!";
+//    }
 
-        @GetMapping("/hello")
-        @ResponseBody
-        public String hello() throws CommandException, InterruptedException, IOException {
-            command("export LD_LIBRARY_PATH=/amberdata/sd/new-clamav/aa/usr/lib");
-            command("echo $LD_LIBRARY_PATH ");
-            command("echo xxxx");
-//            List<String> command = new ArrayList<>();
-//            command.add("/bin/bash -c export LD_LIBRARY_PATH=/amberdata/sd/new-clamav/aa/usr/lib");
-//            command.add("/bin/bash -c echo $LD_LIBRARY_PATH");
-//            command.add("echo 'xxxxx'");
-//            String commandOutput = CommandUtility.execute(command, true);
-//            System.out.println(commandOutput);
-            return "Hello World!";
-        }
+//        @GetMapping("/hello")
+//        @ResponseBody
+//        public String hello() throws CommandException, InterruptedException, IOException {
+//            command("export LD_LIBRARY_PATH=/amberdata/sd/new-clamav/aa/usr/lib");
+//            command("echo $LD_LIBRARY_PATH ");
+//            command("echo xxxx");
+////            List<String> command = new ArrayList<>();
+////            command.add("/bin/bash -c export LD_LIBRARY_PATH=/amberdata/sd/new-clamav/aa/usr/lib");
+////            command.add("/bin/bash -c echo $LD_LIBRARY_PATH");
+////            command.add("echo 'xxxxx'");
+////            String commandOutput = CommandUtility.execute(command, true);
+////            System.out.println(commandOutput);
+//            return "Hello World!";
+//        }
 
     public static void command(String command) throws IOException, InterruptedException {
         Process process = new ProcessBuilder(command.split(" ")).start();

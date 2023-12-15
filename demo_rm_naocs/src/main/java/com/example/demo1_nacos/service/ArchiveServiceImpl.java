@@ -415,7 +415,7 @@ public class ArchiveServiceImpl {
             String documentZipFilePath = ContentTransfer.mkTransferTempDir() + File.separator + uuId + ".zip";
             CompressUtils.compress(documentZipFilePath, rootPath);
             File zipFile = new File(documentZipFilePath);
-            uploadTest(zipFile);
+//            uploadTest(zipFile);
             return zipFile;
         } catch (Exception e) {
             e.printStackTrace();
@@ -534,23 +534,23 @@ public class ArchiveServiceImpl {
     }
 
 
-    public static void uploadTest(File file) throws Exception {
-        try {
-            //初始化
-            MinioClient minioClient = new MinioClient("http://" + ip + ":9000", "admin", "Dctm@1234");
-            //判断桶是否存在
-            Boolean found = minioClient.bucketExists("yctest");
-            if (found) {
-                //上传文件
-                minioClient.putObject(bucketName, "exchange_area/" + file.getName(), file.getPath(), null);
-                System.out.println("上传成功");
-            } else {
-                System.out.println("桶不存在");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void uploadTest(File file) throws Exception {
+//        try {
+//            //初始化
+//            MinioClient minioClient = new MinioClient("http://" + ip + ":9000", "admin", "Dctm@1234");
+//            //判断桶是否存在
+//            Boolean found = minioClient.bucketExists("yctest");
+//            if (found) {
+//                //上传文件
+//                minioClient.putObject(bucketName, "exchange_area/" + file.getName(), file.getPath(), null);
+//                System.out.println("上传成功");
+//            } else {
+//                System.out.println("桶不存在");
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public static void generateJnArchivalId() throws Exception {
         Map<String, String> archivalMap = new HashMap<>();

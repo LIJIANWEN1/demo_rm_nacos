@@ -98,6 +98,13 @@ public class RmOtherController {
         rmOtherService.syncPlatformData(parentId,synParentId);
     }
 
+    @ApiOperation(value = "创建单位文件柜")
+    @GetMapping("/init_unit_foler")
+    public void initSyncLibFolder(Boolean flag,String unitId) {
+        rmOtherService.initSyncLibFolder(flag,unitId);
+
+    }
+
 
 
 
