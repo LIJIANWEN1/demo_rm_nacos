@@ -50,6 +50,34 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>com.jamesmurty.utils</groupId>
+            <artifactId>java-xmlbuilder</artifactId>
+            <version>1.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.iharder</groupId>
+                    <artifactId>base64</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>3.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okio</groupId>
+            <artifactId>okio</artifactId>
+            <version>1.14.0</version>
+        </dependency>
+
+        <!--zzd-->
+        <dependency>
+            <groupId>com.alibaba.xxpt</groupId>
+            <artifactId>sdk</artifactId>
+            <version>1.2.0</version>
+        </dependency>
         <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.alibaba.nacos/nacos-client &ndash;&gt;-->
         <dependency>
             <groupId>com.alibaba.nacos</groupId>
@@ -121,40 +149,40 @@
             <version>1.1.11</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.mybatis.spring.boot</groupId>-->
-<!--            <artifactId>mybatis-spring-boot-starter</artifactId>-->
-<!--            <version>2.1.3</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.mybatis.spring.boot</groupId>-->
+        <!--            <artifactId>mybatis-spring-boot-starter</artifactId>-->
+        <!--            <version>2.1.3</version>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.microsoft.sqlserver</groupId>-->
-<!--            <artifactId>sqljdbc4</artifactId>-->
-<!--            <version>4.0</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.microsoft.sqlserver</groupId>-->
+        <!--            <artifactId>sqljdbc4</artifactId>-->
+        <!--            <version>4.0</version>-->
+        <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba</groupId>-->
-<!--            <artifactId>druid-spring-boot-starter</artifactId>-->
-<!--            <version>1.1.21</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alibaba</groupId>-->
+        <!--            <artifactId>druid-spring-boot-starter</artifactId>-->
+        <!--            <version>1.1.21</version>-->
+        <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>com.baomidou</groupId>-->
-<!--            <artifactId>mybatis-plus-boot-starter</artifactId>-->
-<!--            <version>3.4.2</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.baomidou</groupId>-->
+        <!--            <artifactId>mybatis-plus-boot-starter</artifactId>-->
+        <!--            <version>3.4.2</version>-->
+        <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>com.baomidou</groupId>-->
-<!--            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>-->
-<!--            <version>2.5.4</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.baomidou</groupId>-->
+        <!--            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>-->
+        <!--            <version>2.5.4</version>-->
+        <!--        </dependency>-->
 
         <!--SOFARPC Starter是SOFARPC基于SOFABoot实现的框架，能够将SOFARPC的能力以统一的编程界面和简单的操作形式提供给使用者-->
         <dependency>
@@ -193,20 +221,24 @@
                     <artifactId>common-response</artifactId>
                     <groupId>cn.amberdata.common</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>esdk-obs-java-bundle</artifactId>
+                    <groupId>com.huaweicloud</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.apache.axis</groupId>-->
-<!--            <artifactId>axis</artifactId>-->
-<!--            <version>1.4</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.axis</groupId>-->
+        <!--            <artifactId>axis</artifactId>-->
+        <!--            <version>1.4</version>-->
+        <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>javax.xml.rpc</groupId>-->
-<!--            <artifactId>javax.xml.rpc-api</artifactId>-->
-<!--            <version>1.1.1</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>javax.xml.rpc</groupId>-->
+        <!--            <artifactId>javax.xml.rpc-api</artifactId>-->
+        <!--            <version>1.1.1</version>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>com.aliyun</groupId>
@@ -227,54 +259,62 @@
         </dependency>
 
         <!--台州对接oawebservice接口cxf依赖-->
-           <dependency>
-               <groupId>org.apache.cxf</groupId>
-               <artifactId>cxf-rt-frontend-jaxws</artifactId>
-               <version>3.3.7</version>
-           </dependency>
-           <dependency>
-               <groupId>org.apache.cxf</groupId>
-               <artifactId>cxf-core</artifactId>
-               <version>3.3.7</version>
-           </dependency>
-           <dependency>
-               <groupId>org.apache.cxf</groupId>
-               <artifactId>cxf-rt-rs-client</artifactId>
-               <version>3.3.7</version>
-           </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+            <version>3.3.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-core</artifactId>
+            <version>3.3.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-client</artifactId>
+            <version>3.3.7</version>
+        </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>javax.media</groupId>-->
-<!--            <artifactId>jai_codec</artifactId>-->
-<!--            <version>1.1.3</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.huawei.storage</groupId>
+            <artifactId>esdk-obs-java</artifactId>
+            <version>3.1.2.1</version>
+        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>javax.media</groupId>-->
+        <!--            <artifactId>jai_codec</artifactId>-->
+        <!--            <version>1.1.3</version>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>javax.media</groupId>
             <artifactId>jai_core</artifactId>
             <version>1.1.3</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.codehaus.xfire</groupId>-->
-<!--            <artifactId>xfire-all</artifactId>-->
-<!--            <version>1.2.6</version>-->
-<!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>cn.amberdata.metadata</groupId>-->
-<!--            <artifactId>domain</artifactId>-->
-<!--            <version>2.5.4</version>-->
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>cn.amberdata.metadata</groupId>-->
-<!--                    <artifactId>persistence</artifactId>-->
-<!--                </exclusion>-->
-<!--                <exclusion>-->
-<!--                    <artifactId>pdfbox</artifactId>-->
-<!--                    <groupId>org.apache.pdfbox</groupId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
-<!--        </dependency>-->
+
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.codehaus.xfire</groupId>-->
+        <!--            <artifactId>xfire-all</artifactId>-->
+        <!--            <version>1.2.6</version>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>cn.amberdata.metadata</groupId>-->
+        <!--            <artifactId>domain</artifactId>-->
+        <!--            <version>2.5.4</version>-->
+        <!--            <exclusions>-->
+        <!--                <exclusion>-->
+        <!--                    <groupId>cn.amberdata.metadata</groupId>-->
+        <!--                    <artifactId>persistence</artifactId>-->
+        <!--                </exclusion>-->
+        <!--                <exclusion>-->
+        <!--                    <artifactId>pdfbox</artifactId>-->
+        <!--                    <groupId>org.apache.pdfbox</groupId>-->
+        <!--                </exclusion>-->
+        <!--            </exclusions>-->
+        <!--        </dependency>-->
     </dependencies>
 
     <build>
@@ -285,32 +325,32 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <!--添加打包配置 end-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-dependency-plugin</artifactId>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>unpack</id>-->
-<!--                        <phase>prepare-package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>unpack</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <artifactItems>-->
-<!--                                <artifactItem>-->
-<!--                                    <groupId>cn.amberdata.erms</groupId>-->
-<!--                                    <artifactId>common</artifactId>-->
-<!--                                    <version>1.0-SNAPSHOT</version>-->
-<!--                                    <outputDirectory>${project.build.directory}/${build.finalName}/WEB-INF/classes-->
-<!--                                    </outputDirectory>-->
-<!--                                    <includes>*.xml,*.properties,*.yml,*.json,baseInfo/**,types/**,attributes/**-->
-<!--                                    </includes>-->
-<!--                                </artifactItem>-->
-<!--                            </artifactItems>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-dependency-plugin</artifactId>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>unpack</id>-->
+            <!--                        <phase>prepare-package</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>unpack</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            <artifactItems>-->
+            <!--                                <artifactItem>-->
+            <!--                                    <groupId>cn.amberdata.erms</groupId>-->
+            <!--                                    <artifactId>common</artifactId>-->
+            <!--                                    <version>1.0-SNAPSHOT</version>-->
+            <!--                                    <outputDirectory>${project.build.directory}/${build.finalName}/WEB-INF/classes-->
+            <!--                                    </outputDirectory>-->
+            <!--                                    <includes>*.xml,*.properties,*.yml,*.json,baseInfo/**,types/**,attributes/**-->
+            <!--                                    </includes>-->
+            <!--                                </artifactItem>-->
+            <!--                            </artifactItems>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -344,6 +384,11 @@
                         </include>
                     </includes>
                 </configuration>
+                <executions>
+                    <execution>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -352,7 +397,7 @@
                     <source>8</source>
                     <target>8</target>
                 </configuration>
-            </plugin><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><configuration><source>8</source><target>8</target></configuration></plugin>
+            </plugin>
         </plugins>
     </build>
 
