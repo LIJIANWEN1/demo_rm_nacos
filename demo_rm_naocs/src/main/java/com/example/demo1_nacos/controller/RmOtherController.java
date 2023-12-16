@@ -1,15 +1,31 @@
 package com.example.demo1_nacos.controller;
+import cn.amberdata.common.util.httpclient.HttpClientUtil;
+import cn.amberdata.dm.common.context.session.SessionContext;
+import cn.amberdata.dm.common.context.unit.UnitContext;
 import cn.amberdata.dm.common.permit.FolderPermitHandler;
+import cn.amberdata.dm.common.query.PagingSort;
+import cn.amberdata.dm.common.query.QueryParameter;
+import cn.amberdata.dm.common.utils.BeanUtils;
+import cn.amberdata.dm.common.utils.WrapperResult;
 import cn.amberdata.dm.folder.Folder;
 import cn.amberdata.dm.folder.FolderRepository;
 import cn.amberdata.dm.organization.unit.Unit;
 import cn.amberdata.dm.organization.unit.UnitDO;
 import cn.amberdata.dm.organization.unit.UnitRepository;
 import cn.amberdata.dm.organization.unit.mapper.UnitMapper;
+import cn.amberdata.dm.session.SessionUtil;
 import cn.amberdata.dm.sysobject.ObjectName;
 import cn.amberdata.rm.classification.mapper.SubCategoryMapper;
+import cn.amberdata.rm.common.domain.TypeClassConstant;
 import cn.amberdata.rm.common.log.LogUtil;
 import cn.amberdata.rm.metadata.itemcode.MetadataCodeItem;
+import cn.amberdata.rm.settings.hookdocmatchfield.HookDocMatchFieldDO;
+import cn.amberdata.rm.settings.hookdocmatchfield.HookDocMatchFieldService;
+import cn.amberdata.rm.settings.hookdocmatchfield.command.HookDocMatchFieldUpdateCommand;
+import cn.amberdata.rm.settings.hookdocmatchfield.dto.HookDocMatchFieldDTO;
+import cn.amberdata.rm.settings.hookdocmatchfield.mapper.HookDocMatchFieldMapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo1_nacos.service.RmArchiveServiceImpl;
 import com.example.demo1_nacos.service.RmOtherServiceImpl;
@@ -46,7 +62,11 @@ public class RmOtherController {
     @Resource
     private UnitRepository unitRepository;
 
+    @Resource
+    private HookDocMatchFieldService hookDocMatchFieldService;
 
+    @Resource
+    private HookDocMatchFieldMapper hookDocMatchFieldMapper;
 
 
     @GetMapping("/get_by_path")
@@ -129,6 +149,7 @@ public class RmOtherController {
     @ApiOperation(value = "创建单位文件柜")
     @GetMapping("/init_all_unit")
     public void initAllUnit() {
+        SessionContext.setSession(SessionUtil.getAdminSession());
         List<UnitDO> list = unitMapper.list(new Page<>(1, 200));
         if (CollectionUtils.isEmpty(list)) {
             return;
@@ -152,16 +173,59 @@ public class RmOtherController {
                     cn.amberdata.dm.common.log.LogUtil.error("单个单位初始化同步库失败", e);
                     return;
                 }
-                FolderPermitHandler folderPermitHandler = new FolderPermitHandler(unit.getObjectId().getId());
-                rmOtherService.createUnitFolder(unit, folderPermitHandler);
-                System.out.println("完成初始化单位："+unit.getDisplayName());
+                String tokenUrl = "https://da.nbjb.gov.cn/ermsapi/init/init_one_unit_folder_permissions?unitId="+unit.getObjectId().getId();
+                String jsonStr = HttpClientUtil.doGet(tokenUrl,null,null);
+                System.out.println("完成初始化单位："+jsonStr);
             }
         }
 
 
     }
 
+    @ApiOperation(value = "更新挂接匹配字段")
+    @GetMapping("/update_gj")
+    public void update_gj() {
+        SessionContext.setSession(SessionUtil.getAdminSession());
+        List<UnitDO> list = unitMapper.list(new Page<>(1, 200));
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
+        QueryParameter queryParameter = new QueryParameter();
+        for (UnitDO unitDO : list) {
+            Unit unit = unitRepository.find(unitDO.getId());
+            if (null != unit) {
+                LogUtil.info("开始初始化单位文件夹权限...");
+                QueryWrapper<HookDocMatchFieldDO> queryWrapper = queryParameter.toWrapper();
+                //限定列表查询条件
+                queryWrapper.lambda().eq(HookDocMatchFieldDO::getType, TypeClassConstant.HOOK_DOC_MATH_FIELD_TYPE).eq(HookDocMatchFieldDO::getUnitCode, UnitContext.getObject().getCode());
+                IPage<HookDocMatchFieldDO> dataList = hookDocMatchFieldMapper.findByWrapper(queryWrapper, queryParameter.toPage());
+                for (HookDocMatchFieldDO record : dataList.getRecords()) {
+                    if(record.getDisplayName().equals("档号")) {
+                        HookDocMatchFieldUpdateCommand command = new HookDocMatchFieldUpdateCommand();
+                        command.setDisplayName(record.getDisplayName());
+                        command.setMetadataSchemeName(record.getMetadataSchemeName());
+                        command.setMetadataSchemeId(record.getMetadataSchemeId());
+                        command.setMetadataField(record.getMetadataField());
+                        command.setId(record.getId());
+                        command.setIsOpen(true);
+                        hookDocMatchFieldService.update(command);
+                    }
+                }
 
+                String tokenUrl = "https://da.nbjb.gov.cn/ermsapi/init/init_one_unit_folder_permissions?unitId="+unit.getObjectId().getId();
+                String jsonStr = HttpClientUtil.doGet(tokenUrl,null,null);
+                System.out.println("完成初始化单位："+jsonStr);
+            }
+        }
+
+
+    }
+
+    public static void main(String[] args) {
+        String tokenUrl = "https://da.nbjb.gov.cn/ermsapi/init/init_one_unit_folder_permissions?unitId="+"aaaa";
+        String jsonStr = HttpClientUtil.doGet(tokenUrl,null,null);
+        System.out.println("完成初始化单位："+jsonStr);
+    }
 
 
 
